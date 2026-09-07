@@ -5,6 +5,9 @@ import ssrPlugin from "vite-ssr-components/plugin"
 import tailwindcss from "@tailwindcss/vite"
 
 export default defineConfig({
+  resolve: {
+    tsconfigPaths: true,
+  },
   plugins: [
     cloudflare(),
     ssrPlugin(),

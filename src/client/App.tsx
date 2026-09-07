@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import { useState } from "react"
 
 export default function App() {
@@ -6,7 +7,7 @@ export default function App() {
   return (
     <div>
       <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <Button onClick={() => setCount(count + 1)}>Increment</Button>
     </div>
   )
 }
