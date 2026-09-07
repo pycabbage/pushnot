@@ -1,6 +1,13 @@
+import type { MiddlewareHandler } from "hono"
 import type { ReactNode } from "react"
 import { renderToReadableStream } from "react-dom/server"
 import { Link, ReactRefresh, Script, ViteClient } from "vite-ssr-components/react"
+
+declare module "hono" {
+  interface ContextRenderer {
+    (children: ReactNode): Response | Promise<Response>
+  }
+}
 
 function Layout({ children }: { children: ReactNode }) {
   return (
@@ -18,8 +25,10 @@ function Layout({ children }: { children: ReactNode }) {
   )
 }
 
-export function renderPage(children: ReactNode): Promise<ReadableStream<Uint8Array>> {
-  // renderToReadableStream automatically prepends "<!DOCTYPE html>" when the
-  // root element is <html>, so it is not added manually here.
-  return renderToReadableStream(<Layout>{children}</Layout>)
+export const renderer: MiddlewareHandler = async (c, next) => {
+  c.setRenderer(async (children) => {
+    const stream = await renderToReadableStream(<Layout>{children}</Layout>)
+    return c.body(stream, 200, { "Content-Type": "text/html; charset=UTF-8" })
+  })
+  await next()
 }

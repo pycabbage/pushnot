@@ -1,12 +1,13 @@
 import { Hono } from "hono"
 import App from "./client/App"
-import { renderPage } from "./renderer"
+import { renderer } from "./renderer"
 
-const app = new Hono()
+const app = new Hono<{ Bindings: CloudflareBindings }>()
 
-app.get("/", async (c) => {
-  c.header("Content-Type", "text/html; charset=UTF-8")
-  return c.body(await renderPage(<App />))
+app.use(renderer)
+
+app.get("/", (c) => {
+  return c.render(<App />)
 })
 
 export default app
