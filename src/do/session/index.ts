@@ -7,7 +7,7 @@ import migrations from "../../../drizzle/session/migrations"
 export class SessionDO extends DurableObject<CloudflareBindings> {
   db: DrizzleSqliteDODatabase<typeof relations>
 
-  constructor(ctx: DurableObjectState, env: CloudflareBindings & Cloudflare.Env) {
+  constructor(ctx: DurableObjectState, env: CloudflareBindings) {
     super(ctx, env)
     this.db = drizzle(ctx.storage, { relations, logger: true })
     void ctx.blockConcurrencyWhile(async () => {

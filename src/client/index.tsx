@@ -4,5 +4,6 @@ import App from "./App"
 const root = document.getElementById("root")
 
 if (root) {
-  hydrateRoot(root, <App />)
+  const sessionId = root.querySelector("[data-session-id]")?.getAttribute("data-session-id") ?? ""
+  hydrateRoot(root, <App sessionId={sessionId} />)
 }

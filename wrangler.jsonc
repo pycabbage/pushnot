@@ -11,6 +11,9 @@
       },
     ],
   },
+  "secrets": {
+    "required": ["SESSION_SECRET"],
+  },
   "exports": {
     "SessionDO": {
       "type": "durable-object",

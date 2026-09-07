@@ -17,5 +17,6 @@
 - Workers + Durable Objectsを用いたプッシュ通知システム
 - DOは各セッションごとに作成される
 - `/api/register` → DO `register()` → `subscriber` テーブルに登録
-- `/api/push` → DO `push()` → `subscriber` テーブルにあるクライアントに通知を送信
+- `/api/push/<session_id>` → DO `push()` → `subscriber` テーブルにあるクライアントに通知を送信
+  - curlコマンドによって送信され、このエンドポイントは認証をバイパスします。
 - ページを開いたときクライアントを作成し、JWT発行・cookieに保存

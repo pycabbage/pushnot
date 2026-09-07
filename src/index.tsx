@@ -9,7 +9,7 @@ const app = new Hono<Env>()
   .use(renderer)
   .use(session)
   .get("/", (c) => {
-    return c.render(<App />)
+    return c.render(<App sessionId={c.var.sessionId} />)
   })
   .route("/api", api)
 
