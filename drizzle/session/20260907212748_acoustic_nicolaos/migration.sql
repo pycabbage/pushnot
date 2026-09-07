@@ -1,4 +1,4 @@
-CREATE TABLE `client` (
+CREATE TABLE `subscriber` (
 	`id` text PRIMARY KEY
 );
 --> statement-breakpoint

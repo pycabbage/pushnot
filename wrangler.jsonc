@@ -6,13 +6,13 @@
   "durable_objects": {
     "bindings": [
       {
-        "name": "CLIENT_DO",
-        "class_name": "ClientDO",
+        "name": "SESSION_DO",
+        "class_name": "SessionDO",
       },
     ],
   },
   "exports": {
-    "ClientDO": {
+    "SessionDO": {
       "type": "durable-object",
       "storage": "sqlite",
     },

@@ -8,7 +8,7 @@
     "deploy": "$npm_execpath run build && wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "lint": "concurrently \"oxfmt\" \"oxlint --fix\" \"markdownlint-cli2\"",
-    "db:generate:client": "drizzle-kit generate --config=drizzle.client.config.ts",
+    "db:generate:session": "drizzle-kit generate --config=drizzle.session.config.ts",
     "prepare": "husky"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.44.0",
+    "@hono/zod-validator": "^0.9.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
@@ -44,6 +45,7 @@
     "typescript": "^7.0.2",
     "vite": "^8.1.4",
     "vite-ssr-components": "^0.6.1",
-    "wrangler": "^4.110.0"
+    "wrangler": "^4.110.0",
+    "zod": "^4.5.4"
   }
 }

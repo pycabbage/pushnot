@@ -1,14 +1,17 @@
 import { Hono } from "hono"
+import { session } from "./middleware/session"
 import App from "./client/App"
 import { renderer } from "./renderer"
+import { api } from "./api"
+import { Env } from "./env"
 
-const app = new Hono<{ Bindings: CloudflareBindings }>()
+const app = new Hono<Env>()
+  .use(renderer)
+  .use(session)
+  .get("/", (c) => {
+    return c.render(<App />)
+  })
+  .route("/api", api)
 
-app.use(renderer)
-
-app.get("/", (c) => {
-  return c.render(<App />)
-})
-
-export { ClientDO } from "./do/client"
+export { SessionDO } from "./do/session"
 export default app

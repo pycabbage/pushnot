@@ -2,9 +2,9 @@ import { DurableObject } from "cloudflare:workers"
 import { drizzle, DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlite"
 import { migrate } from "drizzle-orm/durable-sqlite/migrator"
 import { relations } from "./relations"
-import migrations from "../../../drizzle/client/migrations"
+import migrations from "../../../drizzle/session/migrations"
 
-export class ClientDO extends DurableObject<CloudflareBindings> {
+export class SessionDO extends DurableObject<CloudflareBindings> {
   db: DrizzleSqliteDODatabase<typeof relations>
 
   constructor(ctx: DurableObjectState, env: CloudflareBindings & Cloudflare.Env) {
@@ -14,4 +14,7 @@ export class ClientDO extends DurableObject<CloudflareBindings> {
       migrate(this.db, migrations)
     })
   }
+
+  async register() {}
+  async notify() {}
 }

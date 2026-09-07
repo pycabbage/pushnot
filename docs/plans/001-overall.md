@@ -11,3 +11,11 @@
 
 - 認証なし: ページを開いた時点で匿名セッションが作成される
 - UIコンポーネントはすべてshadcn/uiコンポーネントを使用する。自前実装は行わない。
+
+## Architecture
+
+- Workers + Durable Objectsを用いたプッシュ通知システム
+- DOは各セッションごとに作成される
+- `/api/register` → DO `register()` → `subscriber` テーブルに登録
+- `/api/push` → DO `push()` → `subscriber` テーブルにあるクライアントに通知を送信
+- ページを開いたときクライアントを作成し、JWT発行・cookieに保存
