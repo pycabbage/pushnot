@@ -10,4 +10,5 @@ app.get("/", (c) => {
   return c.render(<App />)
 })
 
+export { ClientDO } from "./do/client"
 export default app

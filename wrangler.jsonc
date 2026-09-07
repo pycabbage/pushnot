@@ -3,4 +3,18 @@
   "name": "pushnot",
   "compatibility_date": "2025-08-03",
   "main": "./src/index.tsx",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CLIENT_DO",
+        "class_name": "ClientDO",
+      },
+    ],
+  },
+  "exports": {
+    "ClientDO": {
+      "type": "durable-object",
+      "storage": "sqlite",
+    },
+  },
 }

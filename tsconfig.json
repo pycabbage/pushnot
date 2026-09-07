@@ -11,6 +11,11 @@
     "jsxImportSource": "react",
     "paths": {
       "@/*": ["./src/*"]
-    }
-  }
+    },
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }

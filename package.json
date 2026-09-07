@@ -8,6 +8,7 @@
     "deploy": "$npm_execpath run build && wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "lint": "concurrently \"oxfmt\" \"oxlint --fix\" \"markdownlint-cli2\"",
+    "db:generate:client": "drizzle-kit generate --config=drizzle.client.config.ts",
     "prepare": "husky"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.2.5",
+    "drizzle-orm": "^1.0.0-rc.4",
     "hono": "^4.13.7",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -30,6 +32,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "concurrently": "^10.0.5",
+    "drizzle-kit": "^1.0.0-rc.4",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.0",
     "markdownlint-cli2": "^0.23.2",
@@ -38,6 +41,7 @@
     "oxlint": "^1.81.0",
     "oxlint-tsgolint": "^7.0.2001",
     "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
     "vite": "^8.1.4",
     "vite-ssr-components": "^0.6.1",
     "wrangler": "^4.110.0"
