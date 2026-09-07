@@ -14,4 +14,5 @@ const app = new Hono<Env>()
   .route("/api", api)
 
 export { SessionDO } from "./do/session"
+export type AppType = typeof app
 export default app
