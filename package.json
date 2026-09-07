@@ -7,7 +7,7 @@
     "preview": "$npm_execpath run build && vite preview",
     "deploy": "$npm_execpath run build && wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "lint": "concurrently \"oxfmt\" \"oxlint --fix\"",
+    "lint": "concurrently \"oxfmt\" \"oxlint --fix\" \"markdownlint-cli2\"",
     "prepare": "husky"
   },
   "dependencies": {
@@ -21,9 +21,12 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "babel-plugin-react-compiler": "^1.0.0",
     "concurrently": "^10.0.5",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.0",
+    "markdownlint-cli2": "^0.23.2",
+    "oxc-transform-react": "^0.148.0",
     "oxfmt": "^0.66.0",
     "oxlint": "^1.81.0",
     "oxlint-tsgolint": "^7.0.2001",

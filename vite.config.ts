@@ -7,12 +7,10 @@ import tailwindcss from "@tailwindcss/vite"
 export default defineConfig({
   plugins: [
     cloudflare(),
-    ssrPlugin({
-      hotReload: {
-        ignore: ["./src/client/**/*.tsx"],
-      },
+    ssrPlugin(),
+    react({
+      compiler: true,
     }),
-    react(),
     tailwindcss(),
   ],
 })
