@@ -1,6 +1,6 @@
 import { ArrowsDownUpIcon, BellSlashIcon } from "@phosphor-icons/react"
 import type { ColumnDef } from "@tanstack/react-table"
-import { hc, type InferResponseType } from "hono/client"
+import { hc } from "hono/client"
 import { useState, useTransition } from "react"
 import type { ComponentProps } from "react"
 
@@ -9,12 +9,12 @@ import type { DataTableFeatures } from "@/components/data-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import type { NotificationRow } from "@/do/session/schema/notification"
 
 import type { AppType } from ".."
+import { useNotificationsStore } from "./notifications-store"
 
 const client = hc<AppType>("/")
-
-type NotificationRow = InferResponseType<typeof client.api.notifications.$get>[number]
 
 const notificationColumns: ColumnDef<DataTableFeatures, NotificationRow, unknown>[] = [
   {
@@ -66,8 +66,7 @@ export default function App(props: AppProps) {
   const [isPending, startTransition] = useTransition()
   const [isSending, startSendTransition] = useTransition()
   const [isRegistered, setIsRegistered] = useState(props["data-initial-registered"])
-  const [notifications, setNotifications] = useState<NotificationRow[] | null>(null)
-  const [isLoadingHistory, startHistoryTransition] = useTransition()
+  const notifications = useNotificationsStore((state) => state.notifications)
 
   async function handleToggleRegistration() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
@@ -142,16 +141,6 @@ export default function App(props: AppProps) {
     })
   }
 
-  function handleLoadHistory() {
-    startHistoryTransition(async () => {
-      const res = await client.api.notifications.$get()
-      if (!res.ok) {
-        throw new Error(`Failed to load notification history: ${res.status}`)
-      }
-      setNotifications(await res.json())
-    })
-  }
-
   const registerLabel = isPending
     ? isRegistered
       ? "Unregistering..."
@@ -169,25 +158,21 @@ export default function App(props: AppProps) {
       <Button onClick={handleSendTestNotification} disabled={!isRegistered || isSending}>
         {isSending ? "Sending..." : "Send test notification"}
       </Button>
-      <Button onClick={handleLoadHistory} disabled={isLoadingHistory}>
-        {isLoadingHistory ? "Loading history..." : "View notification history"}
-      </Button>
-      {notifications !== null &&
-        (notifications.length === 0 ? (
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <BellSlashIcon />
-              </EmptyMedia>
-              <EmptyTitle>No notifications yet</EmptyTitle>
-              <EmptyDescription>
-                Send a test notification to see delivery history here.
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        ) : (
-          <DataTable columns={notificationColumns} data={notifications} />
-        ))}
+      {notifications.length === 0 ? (
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <BellSlashIcon />
+            </EmptyMedia>
+            <EmptyTitle>No notifications yet</EmptyTitle>
+            <EmptyDescription>
+              Send a test notification to see delivery history here.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        <DataTable columns={notificationColumns} data={notifications} />
+      )}
     </div>
   )
 }

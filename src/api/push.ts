@@ -3,7 +3,7 @@ import { z } from "zod"
 
 import { factory } from "../env"
 
-const pushSchema = z.object({
+export const pushSchema = z.object({
   title: z.string().min(1),
   body: z.string().optional(),
 })

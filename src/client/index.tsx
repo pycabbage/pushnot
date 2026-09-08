@@ -1,6 +1,9 @@
 import { hydrateRoot } from "react-dom/client"
 
+import type { NotificationRow } from "@/do/session/schema/notification"
+
 import App from "./App"
+import { useNotificationsStore } from "./notifications-store"
 
 const root = document.getElementById("root")
 
@@ -11,6 +14,15 @@ if (root) {
   const initialRegistered =
     root.querySelector("[data-initial-registered]")?.getAttribute("data-initial-registered") ===
     "true"
+
+  const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:"
+  const notificationsSocket = new WebSocket(
+    `${wsProtocol}//${window.location.host}/api/notifications/ws`
+  )
+  notificationsSocket.addEventListener("message", (event) => {
+    const data = JSON.parse(event.data) as { notifications: NotificationRow[] }
+    useNotificationsStore.getState().addNotifications(data.notifications)
+  })
 
   hydrateRoot(
     root,

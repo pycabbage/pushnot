@@ -2,14 +2,16 @@ import { DurableObject } from "cloudflare:workers"
 import { desc, eq } from "drizzle-orm"
 import { DrizzleSqliteDODatabase, drizzle } from "drizzle-orm/durable-sqlite"
 import { migrate } from "drizzle-orm/durable-sqlite/migrator"
+import type { z } from "zod"
 
 import migrations from "../../../drizzle/session/migrations"
+import { pushSchema } from "../../api/push"
 import { sendWebPush } from "../../lib/web-push"
 import { relations } from "./relations"
 import { notificationTable, subscriberTable } from "./schema"
 
 type RegisterInput = Pick<typeof subscriberTable.$inferInsert, "endpoint" | "p256dh" | "auth">
-type PushInput = { title: string; body?: string }
+type PushInput = z.infer<typeof pushSchema>
 
 export class SessionDO extends DurableObject<CloudflareBindings> {
   db: DrizzleSqliteDODatabase<typeof relations>
@@ -48,6 +50,17 @@ export class SessionDO extends DurableObject<CloudflareBindings> {
     return this.db.select().from(notificationTable).orderBy(desc(notificationTable.createdAt))
   }
 
+  async fetch(_request: Request): Promise<Response> {
+    const [client, server] = Object.values(new WebSocketPair())
+    this.ctx.acceptWebSocket(server)
+    server.send(JSON.stringify({ notifications: await this.listNotifications() }))
+    return new Response(null, { status: 101, webSocket: client })
+  }
+
+  webSocketClose(ws: WebSocket, code: number, reason: string) {
+    ws.close(code, reason)
+  }
+
   async push(payload: PushInput) {
     const subscribers = await this.db.select().from(subscriberTable)
 
@@ -61,23 +74,34 @@ export class SessionDO extends DurableObject<CloudflareBindings> {
             .where(eq(subscriberTable.endpoint, subscriber.endpoint))
         }
 
-        await this.db.insert(notificationTable).values({
-          ...payload,
-          success: result.status === "sent",
-          failureReason:
-            result.status === "sent"
-              ? null
-              : result.status === "gone"
-                ? "gone"
-                : `http ${result.httpStatus}`,
-        })
+        const [notification] = await this.db
+          .insert(notificationTable)
+          .values({
+            ...payload,
+            success: result.status === "sent",
+            failureReason:
+              result.status === "sent"
+                ? null
+                : result.status === "gone"
+                  ? "gone"
+                  : `http ${result.httpStatus}`,
+          })
+          .returning()
 
-        return result.status
+        return { status: result.status, notification }
       })
     )
 
-    const sentCount = results.filter((status) => status === "sent").length
-    const failedCount = results.filter((status) => status === "error").length
+    const sentCount = results.filter((result) => result.status === "sent").length
+    const failedCount = results.filter((result) => result.status === "error").length
+
+    const notifications = results.map((result) => result.notification)
+    if (notifications.length > 0) {
+      const message = JSON.stringify({ notifications })
+      for (const ws of this.ctx.getWebSockets()) {
+        ws.send(message)
+      }
+    }
 
     return { totalSubscribers: subscribers.length, sentCount, failedCount }
   }

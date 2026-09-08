@@ -15,3 +15,5 @@ export const notificationTable = sqliteTable("notification", {
     .notNull()
     .$defaultFn(() => new Date()),
 })
+
+export type NotificationRow = typeof notificationTable.$inferSelect
