@@ -9,9 +9,15 @@ import { session } from "./middleware/session"
 const app = new Hono<Env>()
   .use(renderer)
   .use(session)
-  .get("/", (c) => {
+  .get("/", async (c) => {
+    const stub = c.env.SESSION_DO.getByName(c.var.sessionId)
+    const isRegistered = await stub.hasSubscribers()
     return c.render(
-      <App data-session-id={c.var.sessionId} data-vapid-public-key={c.env.VAPID_PUBLIC_KEY} />
+      <App
+        data-session-id={c.var.sessionId}
+        data-vapid-public-key={c.env.VAPID_PUBLIC_KEY}
+        data-initial-registered={isRegistered}
+      />
     )
   })
   .route("/api", api)

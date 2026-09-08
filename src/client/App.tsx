@@ -1,5 +1,5 @@
 import { hc } from "hono/client"
-import { useEffect, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import type { ComponentProps } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -11,22 +11,12 @@ const client = hc<AppType>("/")
 interface AppProps extends ComponentProps<"div"> {
   "data-session-id": string
   "data-vapid-public-key": string
+  "data-initial-registered": boolean
 }
 export default function App(props: AppProps) {
   const [isPending, startTransition] = useTransition()
   const [isSending, startSendTransition] = useTransition()
-  const [isRegistered, setIsRegistered] = useState(false)
-
-  useEffect(() => {
-    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return
-
-    void (async () => {
-      await navigator.serviceWorker.register("/sw.js")
-      const registration = await navigator.serviceWorker.ready
-      const subscription = await registration.pushManager.getSubscription()
-      setIsRegistered(subscription !== null)
-    })()
-  }, [])
+  const [isRegistered, setIsRegistered] = useState(props["data-initial-registered"])
 
   async function handleToggleRegistration() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {

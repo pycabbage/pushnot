@@ -36,6 +36,14 @@ export class SessionDO extends DurableObject<CloudflareBindings> {
     await this.db.delete(subscriberTable).where(eq(subscriberTable.endpoint, endpoint))
   }
 
+  async hasSubscribers() {
+    const [subscriber] = await this.db
+      .select({ endpoint: subscriberTable.endpoint })
+      .from(subscriberTable)
+      .limit(1)
+    return subscriber !== undefined
+  }
+
   async push(payload: PushInput) {
     const subscribers = await this.db.select().from(subscriberTable)
 
