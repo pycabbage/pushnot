@@ -1,24 +1,74 @@
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
 import { hc } from "hono/client"
+import { useTransition } from "react"
+import type { ComponentProps } from "react"
+
+import { Button } from "@/components/ui/button"
+
 import type { AppType } from ".."
 
 const client = hc<AppType>("/")
 
-type AppProps = {
-  sessionId: string
+/**
+ * base64url形式の文字列をUint8Arrayに変換する
+ * (Push API の applicationServerKey に渡すためのMDN定番実装)
+ */
+function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
+  console.log(`urlBase64ToUint8Array(${base64String})`)
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4)
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/")
+  return Uint8Array.fromBase64(base64)
 }
 
-export default function App({ sessionId }: AppProps) {
-  const [count, setCount] = useState(0)
+interface AppProps extends ComponentProps<"div"> {
+  "data-session-id": string
+  "data-vapid-public-key": string
+}
+export default function App(props: AppProps) {
+  const [isPending, startTransition] = useTransition()
 
-  console.log(client.api) // remove this when writing code using client.api in first-time
+  async function handleRegisterClient() {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      throw new Error("This browser does not support Web Push")
+    }
+
+    startTransition(async () => {
+      const registration = await navigator.serviceWorker.register("/sw.js")
+      await navigator.serviceWorker.ready
+
+      const permission = await Notification.requestPermission()
+      if (permission !== "granted") {
+        throw new Error("Notification permission not granted")
+      }
+
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(props["data-vapid-public-key"]),
+      })
+
+      const { endpoint, keys } = subscription.toJSON()
+      if (!endpoint || !keys?.p256dh || !keys?.auth) {
+        throw new Error("Invalid push subscription")
+      }
+
+      const res = await client.api.register.$post({
+        json: {
+          endpoint,
+          keys: { p256dh: keys.p256dh, auth: keys.auth },
+        },
+      })
+
+      if (!res.ok) {
+        throw new Error(`Failed to register client: ${res.status}`)
+      }
+    })
+  }
 
   return (
-    <div data-session-id={sessionId}>
-      <p>Session ID: {sessionId}</p>
-      <p>Count: {count}</p>
-      <Button onClick={() => setCount(count + 1)}>Increment</Button>
+    <div {...props}>
+      <p>Session ID: {props["data-session-id"]}</p>
+      <Button onClick={handleRegisterClient} disabled={isPending}>
+        {isPending ? "Registering..." : "Register client"}
+      </Button>
     </div>
   )
 }

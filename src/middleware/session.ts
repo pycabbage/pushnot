@@ -1,18 +1,19 @@
-import { createMiddleware } from "hono/factory"
 import { getCookie, setCookie } from "hono/cookie"
+import { createMiddleware } from "hono/factory"
 import { sign, verify } from "hono/jwt"
+
 import type { Env } from "../env"
 
 const SESSION_COOKIE_NAME = "session"
-// Cookie/JWTのexp/Max-Ageに使える上限値(1年)
-const SESSION_MAX_AGE = 60 * 60 * 24 * 365
+// Cookie/JWTのexp/Max-Ageに使える上限値(10年)
+const SESSION_MAX_AGE = 60 * 60 * 24 * 365 * 10
 
 export const session = createMiddleware<Env>(async (c, next) => {
   const token = getCookie(c, SESSION_COOKIE_NAME)
-  const sessionId = token ? await verifySessionToken(token, c.env.SESSION_SECRET) : undefined
+  const sub = token ? await verify(token, c.env.SESSION_SECRET, "HS256") : undefined
 
-  if (sessionId) {
-    c.set("sessionId", sessionId)
+  if (typeof sub === "string") {
+    c.set("sessionId", sub)
     return next()
   }
 
@@ -34,12 +35,3 @@ export const session = createMiddleware<Env>(async (c, next) => {
   c.set("sessionId", newSessionId)
   return next()
 })
-
-async function verifySessionToken(token: string, secret: string): Promise<string | undefined> {
-  try {
-    const { sub } = await verify(token, secret, "HS256")
-    return typeof sub === "string" ? sub : undefined
-  } catch {
-    return undefined
-  }
-}

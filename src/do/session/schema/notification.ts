@@ -1,4 +1,4 @@
-import { sqliteTable, integer } from "drizzle-orm/sqlite-core"
+import { integer, sqliteTable } from "drizzle-orm/sqlite-core"
 
 /**
  * 通知の送信履歴

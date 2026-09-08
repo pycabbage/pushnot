@@ -1,7 +1,9 @@
-import type { MiddlewareHandler } from "hono"
+import { createMiddleware } from "hono/factory"
 import type { ReactNode } from "react"
 import { renderToReadableStream } from "react-dom/server"
 import { Link, ReactRefresh, Script, ViteClient } from "vite-ssr-components/react"
+
+import type { Env } from "../env"
 
 declare module "hono" {
   interface ContextRenderer {
@@ -25,10 +27,10 @@ function Layout({ children }: { children: ReactNode }) {
   )
 }
 
-export const renderer: MiddlewareHandler = async (c, next) => {
+export const renderer = createMiddleware<Env>(async (c, next) => {
   c.setRenderer(async (children) => {
     const stream = await renderToReadableStream(<Layout>{children}</Layout>)
     return c.body(stream, 200, { "Content-Type": "text/html; charset=UTF-8" })
   })
   await next()
-}
+})

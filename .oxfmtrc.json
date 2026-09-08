@@ -2,5 +2,6 @@
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "ignorePatterns": ["dist", "drizzle", "worker-configuration.d.ts"],
   "semi": false,
-  "trailingComma": "es5"
+  "trailingComma": "es5",
+  "sortImports": true
 }
