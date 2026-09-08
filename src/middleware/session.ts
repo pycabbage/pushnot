@@ -11,7 +11,6 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 365
 export const session = createMiddleware<Env>(async (c, next) => {
   // Skip session handling for /api/push/*
   if (c.req.url.startsWith("/api/push/")) {
-    console.log("skip session handling for /api/push/*")
     return next()
   }
 
