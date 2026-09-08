@@ -1,6 +1,12 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": ["dist", "drizzle", "worker-configuration.d.ts"],
+  "ignorePatterns": [
+    "dist",
+    "drizzle",
+    "worker-configuration.d.ts",
+    ".agents/skills",
+    ".claude/skills"
+  ],
   "semi": false,
   "trailingComma": "es5",
   "sortImports": true
