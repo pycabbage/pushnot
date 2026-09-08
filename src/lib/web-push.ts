@@ -1,0 +1,173 @@
+import { sign } from "hono/jwt"
+
+/**
+ * Web Push (RFC 8291 aes128gcm content-encoding + RFC 8292 VAPID) の送信ユーティリティ。
+ * 依存ライブラリを追加せず、Web Crypto APIのみで実装している。
+ */
+
+const PUSH_TTL_SECONDS = 60
+const RECORD_SIZE = 4096
+const VAPID_SUBJECT = "mailto:pushnot@example.com"
+
+const WEBPUSH_INFO_PREFIX = new TextEncoder().encode("WebPush: info\0")
+const CEK_INFO = new TextEncoder().encode("Content-Encoding: aes128gcm\0")
+const NONCE_INFO = new TextEncoder().encode("Content-Encoding: nonce\0")
+const RECORD_DELIMITER = Uint8Array.of(2)
+
+export type PushSubscriptionInput = {
+  endpoint: string
+  p256dh: string
+  auth: string
+}
+
+export type SendWebPushResult =
+  | { status: "sent" }
+  | { status: "gone" }
+  | { status: "error"; httpStatus: number }
+
+export type WebPushEnv = {
+  VAPID_PRIVATE_KEY_JWK: string
+  VAPID_PUBLIC_KEY: string
+}
+
+export async function sendWebPush(
+  subscription: PushSubscriptionInput,
+  payload: unknown,
+  env: WebPushEnv
+): Promise<SendWebPushResult> {
+  const body = await encryptPayload(
+    new TextEncoder().encode(JSON.stringify(payload)),
+    subscription.p256dh,
+    subscription.auth
+  )
+  const authorization = await buildVapidAuthHeader(subscription.endpoint, env)
+
+  const response = await fetch(subscription.endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/octet-stream",
+      "Content-Encoding": "aes128gcm",
+      TTL: String(PUSH_TTL_SECONDS),
+      Authorization: authorization,
+    },
+    body: body as BodyInit,
+  })
+
+  if (response.ok) return { status: "sent" }
+  if (response.status === 404 || response.status === 410) return { status: "gone" }
+  return { status: "error", httpStatus: response.status }
+}
+
+async function buildVapidAuthHeader(endpoint: string, env: WebPushEnv): Promise<string> {
+  const aud = new URL(endpoint).origin
+  const exp = Math.floor(Date.now() / 1000) + 12 * 60 * 60
+  const jwt = await sign(
+    { aud, exp, sub: VAPID_SUBJECT },
+    JSON.parse(env.VAPID_PRIVATE_KEY_JWK),
+    "ES256"
+  )
+  return `vapid t=${jwt}, k=${env.VAPID_PUBLIC_KEY}`
+}
+
+/** RFC 8291に基づき、購読者の鍵でペイロードを暗号化しaes128gcm形式のボディを返す */
+export async function encryptPayload(
+  payload: Uint8Array,
+  p256dh: string,
+  auth: string
+): Promise<Uint8Array<ArrayBuffer>> {
+  const uaPublicBytes = base64UrlToBytes(p256dh)
+  const authSecret = base64UrlToBytes(auth)
+
+  const uaPublicKey = await crypto.subtle.importKey(
+    "raw",
+    uaPublicBytes,
+    { name: "ECDH", namedCurve: "P-256" },
+    false,
+    []
+  )
+
+  const asKeyPair = await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, [
+    "deriveBits",
+  ])
+  const asPublicBytes = toBytes(await crypto.subtle.exportKey("raw", asKeyPair.publicKey))
+
+  const sharedSecret = toBytes(
+    await crypto.subtle.deriveBits({ name: "ECDH", public: uaPublicKey }, asKeyPair.privateKey, 256)
+  )
+
+  const keyInfo = concatBytes(WEBPUSH_INFO_PREFIX, uaPublicBytes, asPublicBytes)
+  const ikm = await hkdf(sharedSecret, authSecret, keyInfo, 32)
+
+  const salt = crypto.getRandomValues(allocBytes(16))
+  const cek = await hkdf(ikm, salt, CEK_INFO, 16)
+  const nonce = await hkdf(ikm, salt, NONCE_INFO, 12)
+
+  const cekKey = await crypto.subtle.importKey("raw", cek, "AES-GCM", false, ["encrypt"])
+  // RFC 8188のレコード区切りオクテット(最終レコードなので0x02)を付与する
+  const paddedPlaintext = concatBytes(payload, RECORD_DELIMITER)
+  const ciphertext = toBytes(
+    await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: nonce, tagLength: 128 },
+      cekKey,
+      paddedPlaintext
+    )
+  )
+
+  // aes128gcmヘッダ: salt(16) || record size(4, BE) || keyid長(1) || keyid(as_public)
+  const header = allocBytes(16 + 4 + 1 + asPublicBytes.length)
+  header.set(salt, 0)
+  new DataView(header.buffer).setUint32(16, RECORD_SIZE, false)
+  header[20] = asPublicBytes.length
+  header.set(asPublicBytes, 21)
+
+  return concatBytes(header, ciphertext)
+}
+
+async function hkdf(
+  ikm: Uint8Array,
+  salt: Uint8Array,
+  info: Uint8Array,
+  length: number
+): Promise<Uint8Array<ArrayBuffer>> {
+  const key = await crypto.subtle.importKey("raw", ikm as BufferSource, "HKDF", false, [
+    "deriveBits",
+  ])
+  const bits = await crypto.subtle.deriveBits(
+    { name: "HKDF", hash: "SHA-256", salt: salt as BufferSource, info: info as BufferSource },
+    key,
+    length * 8
+  )
+  return toBytes(bits)
+}
+
+/** 新しいArrayBufferを裏付けとするUint8Arrayを確保する */
+function allocBytes(length: number): Uint8Array<ArrayBuffer> {
+  return new Uint8Array(new ArrayBuffer(length))
+}
+
+/** ArrayBufferをUint8Array<ArrayBuffer>に変換する */
+function toBytes(buffer: ArrayBuffer): Uint8Array<ArrayBuffer> {
+  return new Uint8Array(buffer)
+}
+
+function concatBytes(...parts: Uint8Array[]): Uint8Array<ArrayBuffer> {
+  const total = parts.reduce((sum, part) => sum + part.length, 0)
+  const result = allocBytes(total)
+  let offset = 0
+  for (const part of parts) {
+    result.set(part, offset)
+    offset += part.length
+  }
+  return result
+}
+
+function base64UrlToBytes(base64url: string): Uint8Array<ArrayBuffer> {
+  const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/")
+  const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4)
+  const binary = atob(padded)
+  const bytes = allocBytes(binary.length)
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i)
+  }
+  return bytes
+}

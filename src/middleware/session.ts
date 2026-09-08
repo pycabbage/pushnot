@@ -6,9 +6,14 @@ import type { Env } from "../env"
 
 const SESSION_COOKIE_NAME = "session"
 // Cookie/JWTのexp/Max-Ageに使える上限値(10年)
-const SESSION_MAX_AGE = 60 * 60 * 24 * 365 * 10
+const SESSION_MAX_AGE = 60 * 60 * 24 * 365
 
 export const session = createMiddleware<Env>(async (c, next) => {
+  // Skip session handling for /api/push/*
+  if (c.req.url.startsWith("/api/push/")) {
+    return next()
+  }
+
   const token = getCookie(c, SESSION_COOKIE_NAME)
   const sub = token ? await verify(token, c.env.SESSION_SECRET, "HS256") : undefined
 
