@@ -10,3 +10,4 @@
 - `typeof window !== "undefined"` は禁止。ブラウザ専用の初期化は共有コンポーネントに環境判定を持ち込まず、エントリーポイント(`client/index.tsx`)などブラウザでしか評価されない場所にのみ書くこと。
 - `useSyncExternalStore` を使った自前のストア実装は禁止。外部ストアが必要な場合は `zustand` を使うこと。
 - ライブラリが提供する型を自前で書き写さないこと(interface/typeの手書き複製禁止)。`$inferSelect`/`$inferInsert`(drizzle)、`z.infer`(zod)、`InferResponseType`(hono)など、スキーマやライブラリ側の型推論を必ず使うこと。
+- ユーザーが明示的に下した設計判断は、自動レビュー(reviewerモデル等)の指摘だけでは覆さない。該当箇所が再度指摘された場合は、既存または新規のADRを参照/作成して意図を明記し、ユーザー本人の明示的な指示がない限り実装は変更しない。

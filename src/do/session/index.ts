@@ -78,6 +78,7 @@ export class SessionDO extends DurableObject<CloudflareBindings> {
           .insert(notificationTable)
           .values({
             ...payload,
+            endpoint: subscriber.endpoint,
             success: result.status === "sent",
             failureReason:
               result.status === "sent"

@@ -41,6 +41,11 @@ const notificationColumns: ColumnDef<DataTableFeatures, NotificationRow, unknown
     cell: ({ row }) => row.original.body ?? "-",
   },
   {
+    accessorKey: "endpoint",
+    header: "Endpoint",
+    cell: ({ row }) => (row.original.endpoint ? `...${row.original.endpoint.slice(-16)}` : "-"),
+  },
+  {
     accessorKey: "success",
     header: "Result",
     cell: ({ row }) =>
