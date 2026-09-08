@@ -75,8 +75,8 @@ export async function encryptPayload(
   p256dh: string,
   auth: string
 ): Promise<Uint8Array<ArrayBuffer>> {
-  const uaPublicBytes = base64UrlToBytes(p256dh)
-  const authSecret = base64UrlToBytes(auth)
+  const uaPublicBytes = Uint8Array.fromBase64(p256dh, { alphabet: "base64url" })
+  const authSecret = Uint8Array.fromBase64(auth, { alphabet: "base64url" })
 
   const uaPublicKey = await crypto.subtle.importKey(
     "raw",
@@ -98,7 +98,7 @@ export async function encryptPayload(
   const keyInfo = concatBytes(WEBPUSH_INFO_PREFIX, uaPublicBytes, asPublicBytes)
   const ikm = await hkdf(sharedSecret, authSecret, keyInfo, 32)
 
-  const salt = crypto.getRandomValues(allocBytes(16))
+  const salt = crypto.getRandomValues(new Uint8Array(16))
   const cek = await hkdf(ikm, salt, CEK_INFO, 16)
   const nonce = await hkdf(ikm, salt, NONCE_INFO, 12)
 
@@ -114,7 +114,7 @@ export async function encryptPayload(
   )
 
   // aes128gcmヘッダ: salt(16) || record size(4, BE) || keyid長(1) || keyid(as_public)
-  const header = allocBytes(16 + 4 + 1 + asPublicBytes.length)
+  const header = new Uint8Array(16 + 4 + 1 + asPublicBytes.length)
   header.set(salt, 0)
   new DataView(header.buffer).setUint32(16, RECORD_SIZE, false)
   header[20] = asPublicBytes.length
@@ -140,11 +140,6 @@ async function hkdf(
   return toBytes(bits)
 }
 
-/** 新しいArrayBufferを裏付けとするUint8Arrayを確保する */
-function allocBytes(length: number): Uint8Array<ArrayBuffer> {
-  return new Uint8Array(new ArrayBuffer(length))
-}
-
 /** ArrayBufferをUint8Array<ArrayBuffer>に変換する */
 function toBytes(buffer: ArrayBuffer): Uint8Array<ArrayBuffer> {
   return new Uint8Array(buffer)
@@ -152,22 +147,10 @@ function toBytes(buffer: ArrayBuffer): Uint8Array<ArrayBuffer> {
 
 function concatBytes(...parts: Uint8Array[]): Uint8Array<ArrayBuffer> {
   const total = parts.reduce((sum, part) => sum + part.length, 0)
-  const result = allocBytes(total)
-  let offset = 0
-  for (const part of parts) {
+  const result = new Uint8Array(total)
+  parts.reduce((offset, part) => {
     result.set(part, offset)
-    offset += part.length
-  }
+    return offset + part.length
+  }, 0)
   return result
-}
-
-function base64UrlToBytes(base64url: string): Uint8Array<ArrayBuffer> {
-  const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/")
-  const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4)
-  const binary = atob(padded)
-  const bytes = allocBytes(binary.length)
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i)
-  }
-  return bytes
 }

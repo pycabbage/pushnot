@@ -1,5 +1,5 @@
 import { hc } from "hono/client"
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import type { ComponentProps } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -7,17 +7,6 @@ import { Button } from "@/components/ui/button"
 import type { AppType } from ".."
 
 const client = hc<AppType>("/")
-
-/**
- * base64url形式の文字列をUint8Arrayに変換する
- * (Push API の applicationServerKey に渡すためのMDN定番実装)
- */
-function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
-  console.log(`urlBase64ToUint8Array(${base64String})`)
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/")
-  return Uint8Array.fromBase64(base64)
-}
 
 interface AppProps extends ComponentProps<"div"> {
   "data-session-id": string
@@ -28,7 +17,18 @@ export default function App(props: AppProps) {
   const [isSending, startSendTransition] = useTransition()
   const [isRegistered, setIsRegistered] = useState(false)
 
-  async function handleRegisterClient() {
+  useEffect(() => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return
+
+    void (async () => {
+      await navigator.serviceWorker.register("/sw.js")
+      const registration = await navigator.serviceWorker.ready
+      const subscription = await registration.pushManager.getSubscription()
+      setIsRegistered(subscription !== null)
+    })()
+  }, [])
+
+  async function handleToggleRegistration() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
       throw new Error("This browser does not support Web Push")
     }
@@ -37,6 +37,22 @@ export default function App(props: AppProps) {
       const registration = await navigator.serviceWorker.register("/sw.js")
       await navigator.serviceWorker.ready
 
+      if (isRegistered) {
+        const subscription = await registration.pushManager.getSubscription()
+        if (subscription) {
+          const { endpoint } = subscription.toJSON()
+          if (endpoint) {
+            const res = await client.api.unregister.$post({ json: { endpoint } })
+            if (!res.ok) {
+              throw new Error(`Failed to unregister client: ${res.status}`)
+            }
+          }
+          await subscription.unsubscribe()
+        }
+        setIsRegistered(false)
+        return
+      }
+
       const permission = await Notification.requestPermission()
       if (permission !== "granted") {
         throw new Error("Notification permission not granted")
@@ -44,7 +60,9 @@ export default function App(props: AppProps) {
 
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(props["data-vapid-public-key"]),
+        applicationServerKey: Uint8Array.fromBase64(props["data-vapid-public-key"], {
+          alphabet: "base64url",
+        }),
       })
 
       const { endpoint, keys } = subscription.toJSON()
@@ -83,11 +101,19 @@ export default function App(props: AppProps) {
     })
   }
 
+  const registerLabel = isPending
+    ? isRegistered
+      ? "Unregistering..."
+      : "Registering..."
+    : isRegistered
+      ? "Unregister client"
+      : "Register client"
+
   return (
     <div {...props}>
       <p>Session ID: {props["data-session-id"]}</p>
-      <Button onClick={handleRegisterClient} disabled={isPending}>
-        {isPending ? "Registering..." : "Register client"}
+      <Button onClick={handleToggleRegistration} disabled={isPending}>
+        {registerLabel}
       </Button>
       <Button onClick={handleSendTestNotification} disabled={!isRegistered || isSending}>
         {isSending ? "Sending..." : "Send test notification"}

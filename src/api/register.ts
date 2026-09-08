@@ -20,6 +20,5 @@ export const register = factory
     const { endpoint, keys } = c.req.valid("json")
     const stub = c.env.SESSION_DO.getByName(c.var.sessionId)
     await stub.register({ endpoint, p256dh: keys.p256dh, auth: keys.auth })
-    console.log(`Registered client: ${endpoint}`)
     return c.json({ ok: true })
   })
