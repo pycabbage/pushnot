@@ -111,6 +111,9 @@ export default function App(props: AppProps) {
 
   return (
     <div {...props}>
+      <div className="typeset typeset-docs max-w-[37em]">
+        <h1 className="font-mono">pushnot</h1>
+      </div>
       <p>Session ID: {props["data-session-id"]}</p>
       <Button onClick={handleToggleRegistration} disabled={isPending}>
         {registerLabel}

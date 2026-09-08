@@ -8,6 +8,9 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  server: {
+    hmr: true,
+  },
   plugins: [
     cloudflare(),
     ssrPlugin(),
