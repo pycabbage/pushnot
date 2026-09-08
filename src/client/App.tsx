@@ -1,5 +1,5 @@
 import { hc } from "hono/client"
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import type { ComponentProps } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -25,6 +25,8 @@ interface AppProps extends ComponentProps<"div"> {
 }
 export default function App(props: AppProps) {
   const [isPending, startTransition] = useTransition()
+  const [isSending, startSendTransition] = useTransition()
+  const [isRegistered, setIsRegistered] = useState(false)
 
   async function handleRegisterClient() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
@@ -60,6 +62,24 @@ export default function App(props: AppProps) {
       if (!res.ok) {
         throw new Error(`Failed to register client: ${res.status}`)
       }
+
+      setIsRegistered(true)
+    })
+  }
+
+  function handleSendTestNotification() {
+    startSendTransition(async () => {
+      const res = await client.api.push[":sessionId"].$post({
+        param: { sessionId: props["data-session-id"] },
+        json: {
+          title: "Test notification",
+          body: "This is a test notification from pushnot.",
+        },
+      })
+
+      if (!res.ok) {
+        throw new Error(`Failed to send test notification: ${res.status}`)
+      }
     })
   }
 
@@ -68,6 +88,9 @@ export default function App(props: AppProps) {
       <p>Session ID: {props["data-session-id"]}</p>
       <Button onClick={handleRegisterClient} disabled={isPending}>
         {isPending ? "Registering..." : "Register client"}
+      </Button>
+      <Button onClick={handleSendTestNotification} disabled={!isRegistered || isSending}>
+        {isSending ? "Sending..." : "Send test notification"}
       </Button>
     </div>
   )
