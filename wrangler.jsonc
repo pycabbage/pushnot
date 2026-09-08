@@ -12,7 +12,6 @@
     ],
   },
   "vars": {
-    // Web Push用VAPID公開鍵(秘匿情報ではないためvarsで管理)
     "VAPID_PUBLIC_KEY": "BFMSeiB7uPYBo1i46kHZkeZSDWIddGYqDaO2B_OLwuhKlU-72BNw_ESfyoziJpLyBgyHZnST8a9SOTb9Q6Y2F_A",
   },
   "secrets": {
@@ -22,6 +21,15 @@
     "SessionDO": {
       "type": "durable-object",
       "storage": "sqlite",
+    },
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+    },
+    "traces": {
+      "enabled": true,
     },
   },
 }

@@ -1,5 +1,5 @@
 import { DurableObject } from "cloudflare:workers"
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 import { DrizzleSqliteDODatabase, drizzle } from "drizzle-orm/durable-sqlite"
 import { migrate } from "drizzle-orm/durable-sqlite/migrator"
 
@@ -42,6 +42,10 @@ export class SessionDO extends DurableObject<CloudflareBindings> {
       .from(subscriberTable)
       .limit(1)
     return subscriber !== undefined
+  }
+
+  async listNotifications() {
+    return this.db.select().from(notificationTable).orderBy(desc(notificationTable.createdAt))
   }
 
   async push(payload: PushInput) {
