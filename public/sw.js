@@ -1,6 +1,3 @@
-// Web Pushの購読(subscribe)にはアクティブなServiceWorkerRegistrationが必須なため、
-// 登録機能のために最小限のService Workerを用意している。
-
 self.addEventListener("install", () => {
   self.skipWaiting()
 })

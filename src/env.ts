@@ -3,7 +3,6 @@ import { createFactory } from "hono/factory"
 export type Env = {
   Bindings: CloudflareBindings
   Variables: {
-    // session information
     sessionId: string
   }
 }

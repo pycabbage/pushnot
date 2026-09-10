@@ -3,8 +3,6 @@ import { z } from "zod"
 
 import { factory } from "../env"
 
-// PushSubscription.toJSON()が返す標準的な形状
-// note: zod v4では `.url()` は非推奨のため、代わりにトップレベルの `z.url()` を使用する
 const registerSchema = z.object({
   endpoint: z.url(),
   expirationTime: z.number().nullable().optional(),

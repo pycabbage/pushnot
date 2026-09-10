@@ -68,7 +68,6 @@ export class SessionDO extends DurableObject<CloudflareBindings> {
       subscribers.map(async (subscriber) => {
         const result = await sendWebPush(subscriber, payload, this.env)
         if (result.status === "gone") {
-          // 購読が失効しているため削除する
           await this.db
             .delete(subscriberTable)
             .where(eq(subscriberTable.endpoint, subscriber.endpoint))

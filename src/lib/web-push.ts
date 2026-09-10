@@ -1,10 +1,5 @@
 import { sign } from "hono/jwt"
 
-/**
- * Web Push (RFC 8291 aes128gcm content-encoding + RFC 8292 VAPID) の送信ユーティリティ。
- * 依存ライブラリを追加せず、Web Crypto APIのみで実装している。
- */
-
 const PUSH_TTL_SECONDS = 60
 const RECORD_SIZE = 4096
 const VAPID_SUBJECT = "mailto:pushnot@example.com"
@@ -69,7 +64,6 @@ async function buildVapidAuthHeader(endpoint: string, env: WebPushEnv): Promise<
   return `vapid t=${jwt}, k=${env.VAPID_PUBLIC_KEY}`
 }
 
-/** RFC 8291に基づき、購読者の鍵でペイロードを暗号化しaes128gcm形式のボディを返す */
 export async function encryptPayload(
   payload: Uint8Array,
   p256dh: string,
@@ -103,7 +97,6 @@ export async function encryptPayload(
   const nonce = await hkdf(ikm, salt, NONCE_INFO, 12)
 
   const cekKey = await crypto.subtle.importKey("raw", cek, "AES-GCM", false, ["encrypt"])
-  // RFC 8188のレコード区切りオクテット(最終レコードなので0x02)を付与する
   const paddedPlaintext = concatBytes(payload, RECORD_DELIMITER)
   const ciphertext = toBytes(
     await crypto.subtle.encrypt(
@@ -113,7 +106,6 @@ export async function encryptPayload(
     )
   )
 
-  // aes128gcmヘッダ: salt(16) || record size(4, BE) || keyid長(1) || keyid(as_public)
   const header = new Uint8Array(16 + 4 + 1 + asPublicBytes.length)
   header.set(salt, 0)
   new DataView(header.buffer).setUint32(16, RECORD_SIZE, false)
@@ -140,7 +132,6 @@ async function hkdf(
   return toBytes(bits)
 }
 
-/** ArrayBufferをUint8Array<ArrayBuffer>に変換する */
 function toBytes(buffer: ArrayBuffer): Uint8Array<ArrayBuffer> {
   return new Uint8Array(buffer)
 }

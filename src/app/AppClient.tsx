@@ -1,8 +1,10 @@
+"use client"
+
 import { ArrowsDownUpIcon, BellSlashIcon } from "@phosphor-icons/react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { hc } from "hono/client"
-import { useState, useTransition } from "react"
-import type { ComponentProps } from "react"
+import { Suspense, use, useState, useTransition } from "react"
+import { browser } from "react-dom"
 
 import { DataTable } from "@/components/data-table"
 import type { DataTableFeatures } from "@/components/data-table"
@@ -15,6 +17,19 @@ import type { AppType } from ".."
 import { useNotificationsStore } from "./notifications-store"
 
 const client = hc<AppType>("/")
+
+function NotificationsSocket() {
+  use(browser("Notifications require a browser WebSocket connection."))
+
+  const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:"
+  const socket = new WebSocket(`${wsProtocol}//${window.location.host}/api/notifications/ws`)
+  socket.addEventListener("message", (event) => {
+    const data = JSON.parse(event.data) as { notifications: NotificationRow[] }
+    useNotificationsStore.getState().addNotifications(data.notifications)
+  })
+
+  return null
+}
 
 const notificationColumns: ColumnDef<DataTableFeatures, NotificationRow, unknown>[] = [
   {
@@ -62,15 +77,19 @@ const notificationColumns: ColumnDef<DataTableFeatures, NotificationRow, unknown
   },
 ]
 
-interface AppProps extends ComponentProps<"div"> {
-  "data-session-id": string
-  "data-vapid-public-key": string
-  "data-initial-registered": boolean
+interface AppClientProps {
+  sessionId: string
+  vapidPublicKey: string
+  initialRegistered: boolean
 }
-export default function App(props: AppProps) {
+export default function AppClient({
+  sessionId,
+  vapidPublicKey,
+  initialRegistered,
+}: AppClientProps) {
   const [isPending, startTransition] = useTransition()
   const [isSending, startSendTransition] = useTransition()
-  const [isRegistered, setIsRegistered] = useState(props["data-initial-registered"])
+  const [isRegistered, setIsRegistered] = useState(initialRegistered)
   const notifications = useNotificationsStore((state) => state.notifications)
 
   async function handleToggleRegistration() {
@@ -105,7 +124,7 @@ export default function App(props: AppProps) {
 
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: Uint8Array.fromBase64(props["data-vapid-public-key"], {
+        applicationServerKey: Uint8Array.fromBase64(vapidPublicKey, {
           alphabet: "base64url",
         }),
       })
@@ -133,7 +152,7 @@ export default function App(props: AppProps) {
   function handleSendTestNotification() {
     startSendTransition(async () => {
       const res = await client.api.push[":sessionId"].$post({
-        param: { sessionId: props["data-session-id"] },
+        param: { sessionId },
         json: {
           title: "Test notification",
           body: "This is a test notification from pushnot.",
@@ -155,8 +174,11 @@ export default function App(props: AppProps) {
       : "Register client"
 
   return (
-    <div {...props}>
-      <p>Session ID: {props["data-session-id"]}</p>
+    <div>
+      <Suspense fallback={null}>
+        <NotificationsSocket />
+      </Suspense>
+      <p>Session ID: {sessionId}</p>
       <Button onClick={handleToggleRegistration} disabled={isPending}>
         {registerLabel}
       </Button>
