@@ -102,7 +102,7 @@ export default function AppClient({
     }
 
     startTransition(async () => {
-      const registration = await navigator.serviceWorker.register(serviceWorkerUrl)
+      const registration = await navigator.serviceWorker.register(serviceWorkerUrl, { scope: "/" })
       await navigator.serviceWorker.ready
 
       if (isRegistered) {

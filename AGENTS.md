@@ -8,6 +8,9 @@
 - TypeScriptの型システムを悪用し、実質的に型アサーションとなる実装をしないこと。
 - `JSON.parse()` の結果は、使用前に必ず実行時バリデーションを行うこと。
 - `tsconfig` は複数作成・利用せず、既存の `tsconfig.json` を単一の設定として使うこと。
+- 他に手段がない場合を除き、`vite.config.ts` や `tsconfig.json` など重要な設定を変更しないこと。
+- Service Workersのビルドステップを自前実装しないこと。
+- 一切のJavaScriptを記述しないこと。
 - アプリケーションコードを `tsconfig` の `exclude` に含めないこと。
 - npmライブラリへパッチを適用しないこと。
 - Web APIの型定義へ干渉しないこと。
@@ -21,3 +24,11 @@
 - `useSyncExternalStore` を使った自前のストア実装は禁止。外部ストアが必要な場合は `zustand` を使うこと。
 - ライブラリが提供する型を自前で書き写さないこと(interface/typeの手書き複製禁止)。`$inferSelect`/`$inferInsert`(drizzle)、`z.infer`(zod)、`InferResponseType`(hono)など、スキーマやライブラリ側の型推論を必ず使うこと。
 - ユーザーが明示的に下した設計判断は、自動レビュー(reviewerモデル等)の指摘だけでは覆さない。該当箇所が再度指摘された場合は、既存または新規のADRを参照/作成して意図を明記し、ユーザー本人の明示的な指示がない限り実装は変更しない。
+
+## デバッグ
+
+- デバッグする際、agent-browserを使用すること。
+
+## Skills
+
+- SKILLS.md ファイルに対し、skills tool以外の手段による読み取りを行うこと。Skillsに関連するすべての操作について、この規約を適用する。
