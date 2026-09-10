@@ -1,4 +1,5 @@
 import { sign } from "hono/jwt"
+import { z } from "zod"
 
 const PUSH_TTL_SECONDS = 60
 const RECORD_SIZE = 4096
@@ -7,7 +8,14 @@ const VAPID_SUBJECT = "mailto:pushnot@example.com"
 const WEBPUSH_INFO_PREFIX = new TextEncoder().encode("WebPush: info\0")
 const CEK_INFO = new TextEncoder().encode("Content-Encoding: aes128gcm\0")
 const NONCE_INFO = new TextEncoder().encode("Content-Encoding: nonce\0")
-const RECORD_DELIMITER = Uint8Array.of(2)
+const RECORD_DELIMITER = new Uint8Array([2])
+const vapidPrivateKeySchema = z.object({
+  kty: z.literal("EC"),
+  crv: z.literal("P-256"),
+  x: z.string(),
+  y: z.string(),
+  d: z.string(),
+})
 
 export type PushSubscriptionInput = {
   endpoint: string
@@ -45,7 +53,7 @@ export async function sendWebPush(
       TTL: String(PUSH_TTL_SECONDS),
       Authorization: authorization,
     },
-    body: body as BodyInit,
+    body,
   })
 
   if (response.ok) return { status: "sent" }
@@ -58,14 +66,14 @@ async function buildVapidAuthHeader(endpoint: string, env: WebPushEnv): Promise<
   const exp = Math.floor(Date.now() / 1000) + 12 * 60 * 60
   const jwt = await sign(
     { aud, exp, sub: VAPID_SUBJECT },
-    JSON.parse(env.VAPID_PRIVATE_KEY_JWK),
+    vapidPrivateKeySchema.parse(JSON.parse(env.VAPID_PRIVATE_KEY_JWK)),
     "ES256"
   )
   return `vapid t=${jwt}, k=${env.VAPID_PUBLIC_KEY}`
 }
 
 export async function encryptPayload(
-  payload: Uint8Array,
+  payload: Uint8Array<ArrayBuffer>,
   p256dh: string,
   auth: string
 ): Promise<Uint8Array<ArrayBuffer>> {
@@ -116,16 +124,14 @@ export async function encryptPayload(
 }
 
 async function hkdf(
-  ikm: Uint8Array,
-  salt: Uint8Array,
-  info: Uint8Array,
+  ikm: Uint8Array<ArrayBuffer>,
+  salt: Uint8Array<ArrayBuffer>,
+  info: Uint8Array<ArrayBuffer>,
   length: number
 ): Promise<Uint8Array<ArrayBuffer>> {
-  const key = await crypto.subtle.importKey("raw", ikm as BufferSource, "HKDF", false, [
-    "deriveBits",
-  ])
+  const key = await crypto.subtle.importKey("raw", ikm, "HKDF", false, ["deriveBits"])
   const bits = await crypto.subtle.deriveBits(
-    { name: "HKDF", hash: "SHA-256", salt: salt as BufferSource, info: info as BufferSource },
+    { name: "HKDF", hash: "SHA-256", salt, info },
     key,
     length * 8
   )
@@ -136,7 +142,7 @@ function toBytes(buffer: ArrayBuffer): Uint8Array<ArrayBuffer> {
   return new Uint8Array(buffer)
 }
 
-function concatBytes(...parts: Uint8Array[]): Uint8Array<ArrayBuffer> {
+function concatBytes(...parts: Uint8Array<ArrayBuffer>[]): Uint8Array<ArrayBuffer> {
   const total = parts.reduce((sum, part) => sum + part.length, 0)
   const result = new Uint8Array(total)
   parts.reduce((offset, part) => {

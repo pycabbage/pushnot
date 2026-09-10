@@ -1,5 +1,9 @@
+/// <reference lib="webworker" />
+
+declare const self: ServiceWorkerGlobalScope
+
 self.addEventListener("install", () => {
-  self.skipWaiting()
+  void self.skipWaiting()
 })
 
 self.addEventListener("activate", (event) => {
@@ -13,3 +17,5 @@ self.addEventListener("push", (event) => {
 
   event.waitUntil(self.registration.showNotification(title, options))
 })
+
+export default undefined

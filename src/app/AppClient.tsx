@@ -5,18 +5,22 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { hc } from "hono/client"
 import { Suspense, use, useState, useTransition } from "react"
 import { browser } from "react-dom"
+import { z } from "zod"
 
 import { DataTable } from "@/components/data-table"
 import type { DataTableFeatures } from "@/components/data-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { notificationSchema } from "@/do/session/schema/notification"
 import type { NotificationRow } from "@/do/session/schema/notification"
 
 import type { AppType } from ".."
+import serviceWorkerUrl from "../sw.ts?worker&url"
 import { useNotificationsStore } from "./notifications-store"
 
 const client = hc<AppType>("/")
+const notificationsSchema = z.object({ notifications: z.array(notificationSchema) })
 
 function NotificationsSocket() {
   use(browser("Notifications require a browser WebSocket connection."))
@@ -24,7 +28,7 @@ function NotificationsSocket() {
   const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:"
   const socket = new WebSocket(`${wsProtocol}//${window.location.host}/api/notifications/ws`)
   socket.addEventListener("message", (event) => {
-    const data = JSON.parse(event.data) as { notifications: NotificationRow[] }
+    const data = notificationsSchema.parse(JSON.parse(event.data))
     useNotificationsStore.getState().addNotifications(data.notifications)
   })
 
@@ -98,7 +102,7 @@ export default function AppClient({
     }
 
     startTransition(async () => {
-      const registration = await navigator.serviceWorker.register("/sw.js")
+      const registration = await navigator.serviceWorker.register(serviceWorkerUrl)
       await navigator.serviceWorker.ready
 
       if (isRegistered) {
