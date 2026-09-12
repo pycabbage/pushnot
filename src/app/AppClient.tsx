@@ -36,8 +36,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Spinner } from "@/components/ui/spinner"
-import { notificationSchema } from "@/do/session/schema/notification"
 import type { NotificationRow } from "@/do/session/schema/notification"
+import { notificationSchema } from "@/do/session/schema/notification-payload"
 
 import type { AppType } from ".."
 import serviceWorkerUrl from "../sw.ts?worker&url"
