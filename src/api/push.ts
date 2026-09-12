@@ -93,7 +93,6 @@ export const push = factory
     )
 
     if (payload.type === "codex" || payload.type === "cc") {
-      // hooks側がClaude Code/Codexの挙動へ干渉しない場合、何も出力しない必要がある
       return c.body(null, 204)
     }
 
