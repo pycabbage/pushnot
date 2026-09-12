@@ -61,11 +61,6 @@ const notificationColumns: ColumnDef<DataTableFeatures, NotificationRow, unknown
     cell: ({ row }) => row.original.body ?? "-",
   },
   {
-    accessorKey: "endpoint",
-    header: "Endpoint",
-    cell: ({ row }) => (row.original.endpoint ? `...${row.original.endpoint.slice(-16)}` : "-"),
-  },
-  {
     accessorKey: "success",
     header: "Result",
     cell: ({ row }) =>
@@ -74,11 +69,6 @@ const notificationColumns: ColumnDef<DataTableFeatures, NotificationRow, unknown
       ) : (
         <Badge variant="destructive">Failed</Badge>
       ),
-  },
-  {
-    accessorKey: "failureReason",
-    header: "Failure reason",
-    cell: ({ row }) => row.original.failureReason ?? "-",
   },
 ]
 
@@ -92,7 +82,7 @@ export default function AppClient({
   vapidPublicKey,
   initialRegistered,
 }: AppClientProps) {
-  const [isPending, startTransition] = useTransition()
+  const [isRegistering, startRegisterTransition] = useTransition()
   const [isSending, startSendTransition] = useTransition()
   const [isRegistered, setIsRegistered] = useState(initialRegistered)
   const notifications = useNotificationsStore((state) => state.notifications)
@@ -103,7 +93,7 @@ export default function AppClient({
       throw new Error("This browser does not support Web Push")
     }
 
-    startTransition(async () => {
+    startRegisterTransition(async () => {
       const registration = await navigator.serviceWorker.register(serviceWorkerUrl, { scope: "/" })
       await navigator.serviceWorker.ready
 
@@ -171,7 +161,7 @@ export default function AppClient({
     })
   }
 
-  const registerLabel = isPending
+  const registerLabel = isRegistering
     ? isRegistered
       ? "Unregistering..."
       : "Registering..."
@@ -184,8 +174,7 @@ export default function AppClient({
       <Suspense fallback={null}>
         <NotificationsSocket />
       </Suspense>
-      <p>Session ID: {sessionId}</p>
-      <Button onClick={handleToggleRegistration} disabled={isPending}>
+      <Button onClick={handleToggleRegistration} disabled={isRegistering}>
         {registerLabel}
       </Button>
       <Button onClick={handleSendTestNotification} disabled={!isRegistered || isSending}>

@@ -13,7 +13,7 @@ const app = new Hono<Env>()
   .get("/", (c) =>
     c.render(
       <Layout>
-        <App vars={c.var} />
+        <App vars={c.var} url={c.req.url} />
       </Layout>
     )
   )
