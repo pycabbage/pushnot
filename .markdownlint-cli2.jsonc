@@ -2,4 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/refs/heads/main/schema/markdownlint-cli2-config-schema.json",
   "globs": ["**/*.md"],
   "ignores": ["node_modules/**", ".agents/skills/**", ".claude/skills/**"],
+  "config": {
+    "line-length": false,
+  },
 }
