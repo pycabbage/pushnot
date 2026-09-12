@@ -68,11 +68,6 @@ const pushSchema = z.codec(
 
 export const push = factory
   .createApp()
-  .use(async (c, next) => {
-    console.debug("payload:", JSON.stringify(await c.req.json()))
-    console.debug("headers:", JSON.stringify(c.req.header()))
-    return next()
-  })
   .post("/:sessionId", zValidator("json", pushSchema), async (c) => {
     const sessionId = c.req.param("sessionId")
     const payload = c.req.valid("json")

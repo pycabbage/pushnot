@@ -1,3 +1,161 @@
+---
+lockfileVersion: '9.0'
+
+importers:
+
+  .:
+    configDependencies: {}
+    packageManagerDependencies:
+      pnpm:
+        specifier: 12.4.1
+        version: 12.4.1
+
+packages:
+
+  '@pnpm/exe.android-arm64@12.4.1':
+    resolution: {integrity: sha512-/HwsqXMSmlOfgtV9+O0ratzjV6Vd/8n1hh4rGHpCGmDURvt52MwZxdbhyxP4K03ZfvgSDvotFPr8O+RzE5Eu8A==}
+    cpu: [arm64]
+    os: [android]
+
+  '@pnpm/exe.android-x64@12.4.1':
+    resolution: {integrity: sha512-+l74Qb4c2YjOzNKHXJLg+1wr8xHM1ckkUhnU5KRUK9TJqiiczt6yeTZqqzHIlJ8i6pAoj5V0OJevDRwnQKLgrQ==}
+    cpu: [x64]
+    os: [android]
+
+  '@pnpm/exe.darwin-arm64@12.4.1':
+    resolution: {integrity: sha512-6rkZkT3iGfaxknUdGHraqSWFvTa6N0ajAHluv9Ax0GRWs0sIcGNiFhDopv6xSZCsJZmG483aNS/b6UEDy3blfw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@pnpm/exe.darwin-x64@12.4.1':
+    resolution: {integrity: sha512-Vb1CHlR88HghC1qUxjxjs82zQSXnXacPD+btG2CmG8Q/hBU7Q0/b2YWJKSQqZXicunV5khFtfTlAwJddV9RkYA==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@pnpm/exe.freebsd-x64@12.4.1':
+    resolution: {integrity: sha512-iT3iHz3Nl0Sxxj7UPOtZ/aQ81AFsQhjoeWMAlPkSRO04gsgDGAXv3UYxOFaesMWsfNxaGn0A+CITbuCHFF66FA==}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@pnpm/exe.linux-arm64-musl@12.4.1':
+    resolution: {integrity: sha512-aBooZfNXM5f+OGUgCAMFWpE/kAhsWfvmqIyMtHy6zl3aNxyInWrcY/Saln/UElzo7lZWMC0Yktroxd/2J26lNQ==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@pnpm/exe.linux-arm64@12.4.1':
+    resolution: {integrity: sha512-TlOdacTTP09BgcMvwWBFRsu8VAjfwqwnslBj+XSq1JFM3ck4f3k+1O/747EuctxZxs3/o785b6Q3s7Pd92Ptsg==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pnpm/exe.linux-ppc64@12.4.1':
+    resolution: {integrity: sha512-r/ab/MlIBo75oizUP5ITiziCCrnXz4SJwfErLQ+603AshB+Yq7xTMCoMtzTSCAMu6aaymIKkAFtZvd2J75Wq0w==}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pnpm/exe.linux-riscv64@12.4.1':
+    resolution: {integrity: sha512-C/D1QWdKMiB8+wv/spl1rGITFUuqC+aI/fb6h8NB5sqxsOaGXeYc/g891oCuzggHn6SODk9p+I09hI76x/cMNw==}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pnpm/exe.linux-s390x@12.4.1':
+    resolution: {integrity: sha512-nxz5zD4yXt94uzbStDk0QTPKW+aE92hH1b5tFXK9ctB1HE9Xcq1vjTiA2LsZMFC6p4gdu5OwQeFqYNAVGa6QlA==}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@pnpm/exe.linux-x64-musl@12.4.1':
+    resolution: {integrity: sha512-5AwgFdGhVUg2kIweYGfxzSLEHiIG77PQhZAkXC3TwofQHsu1Wr+TrV5/rNX2PopFnHRzuE581zoB8F6Wle32yg==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@pnpm/exe.linux-x64@12.4.1':
+    resolution: {integrity: sha512-FJOZuuuQMhp0oLzBtcKkLXknBI92hfkmSnlKc47vfin4HrmfID5khY2lGekL9tCzk1cpR+HShEw/meFl+nHtzQ==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pnpm/exe.win32-arm64@12.4.1':
+    resolution: {integrity: sha512-OO7eKBL9S+xk5hRy+JUUZSNJknGuGe3GEUffsrlC2LbqKF02g+VX1anGIzSbJDvkkdnpJhSlxF5AUz2JzJu2Jw==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@pnpm/exe.win32-x64@12.4.1':
+    resolution: {integrity: sha512-x7gJHZgHo6hp354xCYA2NvoFzYJkHwovt2kVsUBK5EmXULLcP51JGMq09CX+5FRFJUZFKoXjLu3mZWmfP7o6PQ==}
+    cpu: [x64]
+    os: [win32]
+
+  pnpm@12.4.1:
+    resolution: {integrity: sha512-LoHjmdc/6DkNqyXgaqeIq3pZCCSNL1o3D4K0gRR6ano2e/gEj5pv22Rg8hpm8FQt7bi5TKLIcjWWdBkgsWVtTA==}
+    engines: {node: '>=18.*'}
+    hasBin: true
+
+snapshots:
+
+  '@pnpm/exe.android-arm64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.android-x64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.darwin-arm64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.darwin-x64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.freebsd-x64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.linux-arm64-musl@12.4.1':
+    optional: true
+
+  '@pnpm/exe.linux-arm64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.linux-ppc64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.linux-riscv64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.linux-s390x@12.4.1':
+    optional: true
+
+  '@pnpm/exe.linux-x64-musl@12.4.1':
+    optional: true
+
+  '@pnpm/exe.linux-x64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.win32-arm64@12.4.1':
+    optional: true
+
+  '@pnpm/exe.win32-x64@12.4.1':
+    optional: true
+
+  pnpm@12.4.1:
+    optionalDependencies:
+      '@pnpm/exe.android-arm64': 12.4.1
+      '@pnpm/exe.android-x64': 12.4.1
+      '@pnpm/exe.darwin-arm64': 12.4.1
+      '@pnpm/exe.darwin-x64': 12.4.1
+      '@pnpm/exe.freebsd-x64': 12.4.1
+      '@pnpm/exe.linux-arm64': 12.4.1
+      '@pnpm/exe.linux-arm64-musl': 12.4.1
+      '@pnpm/exe.linux-ppc64': 12.4.1
+      '@pnpm/exe.linux-riscv64': 12.4.1
+      '@pnpm/exe.linux-s390x': 12.4.1
+      '@pnpm/exe.linux-x64': 12.4.1
+      '@pnpm/exe.linux-x64-musl': 12.4.1
+      '@pnpm/exe.win32-arm64': 12.4.1
+      '@pnpm/exe.win32-x64': 12.4.1
+
+---
 lockfileVersion: '9.0'
 
 settings:
@@ -50,13 +208,16 @@ importers:
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: ^1.54.8
-        version: 1.54.8(vite@8.3.0)(wrangler@4.131.1)
+        version: 1.54.8(@types/node@26.5.1)(vite@8.3.0)(wrangler@4.131.1(@types/node@26.5.1))
       '@hono/zod-validator':
         specifier: ^0.9.1
         version: 0.9.1(hono@4.13.7)(zod@4.6.2)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.3.0)
+      '@types/node':
+        specifier: ^26.5.1
+        version: 26.5.1
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
@@ -87,6 +248,9 @@ importers:
       markdownlint-cli2:
         specifier: ^0.23.2
         version: 0.23.2(supports-color@10.2.2)
+      node:
+        specifier: runtime:26.8.2
+        version: runtime:26.8.2
       oxc-transform-react:
         specifier: ^0.145.0
         version: 0.145.0
@@ -110,10 +274,10 @@ importers:
         version: 7.0.2
       vite:
         specifier: ^8.3.0
-        version: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+        version: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
       wrangler:
         specifier: ^4.131.1
-        version: 4.131.1
+        version: 4.131.1(@types/node@26.5.1)
       zod:
         specifier: ^4.6.2
         version: 4.6.2
@@ -1670,6 +1834,9 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
+  '@types/node@26.5.1':
+    resolution: {integrity: sha512-CzNm2FezW4VR/LjG6yUdiEgLE/rAQ9Slj5gCu/C2VrdcW7I0ahNZ8DRbHT7zOZ6r3ONgd/bsQIeSaoDGrd1C6g==}
+
   '@types/react-dom@19.3.0':
     resolution: {integrity: sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q==}
     peerDependencies:
@@ -3173,6 +3340,138 @@ packages:
     resolution: {integrity: sha512-YHs7BmmcsdAI5Ozuf8JZo6PT0mv2GIWC9vMfvUC3dp65M8hn7Ux8CPL+2oBI7juNuj9d0ndhTcznq2ODBps9cQ==}
     engines: {node: '>=18'}
 
+  node@runtime:26.8.2:
+    resolution:
+      type: variations
+      variants:
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-iXqaQYiTLhmwQqxiRUGPgHuauXFVncxCiN1XcZHVNr0=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-aix-ppc64.tar.gz
+          targets:
+            - cpu: ppc64
+              os: aix
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-l0ttX7L8fDP/I1TbCQK06Rwt4B7IrMbeSOVDyX4YyeE=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-darwin-arm64.tar.gz
+          targets:
+            - cpu: arm64
+              os: darwin
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-rbj+stSYffPXLS7Eb0/EtYA5yFm4w/DjzC08bLr4Ypw=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-darwin-x64.tar.gz
+          targets:
+            - cpu: x64
+              os: darwin
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-dGzb8hVltOoG93ZCuw6FRm3ou3IiQr4sXgBvJyw2HGM=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-linux-arm64.tar.gz
+          targets:
+            - cpu: arm64
+              os: linux
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-1ghXhcX4cZJ1P8coJWU7P6A/hGj4AJEcz9wnAcrN4K8=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-linux-ppc64le.tar.gz
+          targets:
+            - cpu: ppc64le
+              os: linux
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-rT5/0BNAFuub2jZT1u832fNgnsbiWg0SLmwz/bsrsNc=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-linux-s390x.tar.gz
+          targets:
+            - cpu: s390x
+              os: linux
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-aIVMZpAfiL/oVFDDsuQCmW7yfvccdVFQGSL4aXAaiD8=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-linux-x64-musl.tar.gz
+          targets:
+            - cpu: x64
+              os: linux
+              libc: musl
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-uts/5qYbheE1LKZWTcVri3vV7NXEdMUqzCHdDN1YbzU=
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-linux-x64.tar.gz
+          targets:
+            - cpu: x64
+              os: linux
+        - resolution:
+            archive: zip
+            bin:
+              node: node.exe
+            integrity: sha256-pOg2LiaPH88XNfBG4K2wiLKO60APscM/5cyU0aPUJXA=
+            prefix: node-v26.8.2-win-arm64
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-win-arm64.zip
+          targets:
+            - cpu: arm64
+              os: win32
+        - resolution:
+            archive: zip
+            bin:
+              node: node.exe
+            integrity: sha256-zwL10MBseUuE8ncXfVzzdD0JJMpJ9mQc1DXdfLbukIU=
+            prefix: node-v26.8.2-win-x64
+            type: binary
+            url: https://nodejs.org/download/release/v26.8.2/node-v26.8.2-win-x64.zip
+          targets:
+            - cpu: x64
+              os: win32
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-ElQ3oLWdaVkrj0u4E6RyRTN6+sjJc9Fat3IPDsVdGC0=
+            type: binary
+            url: https://unofficial-builds.nodejs.org/download/release/v26.8.2/node-v26.8.2-linux-arm64-musl.tar.gz
+          targets:
+            - cpu: arm64
+              os: linux
+              libc: musl
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-aW6wGAJIoGyYk/Pwe8xOJoCJHIMRjHOq8d4zDv0FORA=
+            type: binary
+            url: https://unofficial-builds.nodejs.org/download/release/v26.8.2/node-v26.8.2-linux-x64-musl.tar.gz
+          targets:
+            - cpu: x64
+              os: linux
+              libc: musl
+    version: 26.8.2
+    hasBin: true
+
   nostics@1.2.0:
     resolution: {integrity: sha512-FGqEfhQjrvo1lL8KFifdTQiNwwQHJxC1jtYE1Rc54qF/jxONUNL+kC9gS1krX8Q65PgrQ5fCqH/I4NhWBvdSqg==}
 
@@ -3699,6 +3998,9 @@ packages:
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
 
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
+
   undici@7.29.0:
     resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
     engines: {node: '>=20.18.1'}
@@ -4133,14 +4435,14 @@ snapshots:
     optionalDependencies:
       workerd: 1.20260911.1
 
-  '@cloudflare/vite-plugin@1.54.8(vite@8.3.0)(wrangler@4.131.1)':
+  '@cloudflare/vite-plugin@1.54.8(@types/node@26.5.1)(vite@8.3.0)(wrangler@4.131.1(@types/node@26.5.1))':
     dependencies:
       '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260911.1)
-      miniflare: 5.20260911.0-alpha
+      miniflare: 5.20260911.0-alpha(@types/node@26.5.1)
       unenv: 2.0.0-rc.24
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
       workerd: 1.20260911.1
-      wrangler: 4.131.1
+      wrangler: 4.131.1(@types/node@26.5.1)
       ws: 8.21.0
     transitivePeerDependencies:
       - '@types/node'
@@ -4211,7 +4513,7 @@ snapshots:
       cac: 7.0.0
       devframe: 0.9.18(cac@7.0.0)(srvx@1.0.4)
     optionalDependencies:
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     optional: true
 
   '@devframes/plugin-messages@0.9.18(@devframes/hub@0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4))(vite@8.3.0)':
@@ -4221,7 +4523,7 @@ snapshots:
       cac: 7.0.0
       devframe: 0.9.18(cac@7.0.0)(srvx@1.0.4)
     optionalDependencies:
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     optional: true
 
   '@devframes/plugin-terminals@0.9.18(@devframes/hub-ui@0.9.18(@devframes/hub@0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(@devframes/json-render@0.9.18(@devframes/hub@0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(@devframes/hub@0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4))(vite@8.3.0)':
@@ -4231,7 +4533,7 @@ snapshots:
       devframe: 0.9.18(cac@7.0.0)(srvx@1.0.4)
       zigpty: 0.2.1
     optionalDependencies:
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@devframes/hub'
       - '@devframes/hub-ui'
@@ -4250,7 +4552,7 @@ snapshots:
     optionalDependencies:
       '@devframes/hub': 0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4))
       '@devframes/hub-ui': 0.9.18(@devframes/hub@0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(@devframes/json-render@0.9.18(@devframes/hub@0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4))
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     optional: true
 
   '@dotenvx/dotenvx@1.75.1':
@@ -4994,7 +5296,7 @@ snapshots:
       '@tailwindcss/node': 4.3.3
       '@tailwindcss/oxide': 4.3.3
       tailwindcss: 4.3.3
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
 
   '@tanstack/react-store@0.11.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
@@ -5032,6 +5334,10 @@ snapshots:
   '@types/katex@0.16.8': {}
 
   '@types/ms@2.1.0': {}
+
+  '@types/node@26.5.1':
+    dependencies:
+      undici-types: 8.9.0
 
   '@types/react-dom@19.3.0(@types/react@19.3.0)':
     dependencies:
@@ -5114,7 +5420,7 @@ snapshots:
       mlly: 1.8.2
       nostics: 1.2.0
       nypm: 0.6.10
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@modelcontextprotocol/client'
       - cac
@@ -5166,7 +5472,7 @@ snapshots:
       nostics: 1.2.0
       pathe: 2.0.3
       perfect-debounce: 2.1.0
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@modelcontextprotocol/client'
       - cac
@@ -5191,7 +5497,7 @@ snapshots:
       nostics: 1.2.0
       obug: 2.2.1
       pathe: 2.0.3
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     optionalDependencies:
       '@vitejs/devtools-oxc': 0.7.3(crossws@0.4.12(srvx@1.0.4))(srvx@1.0.4)(typescript@7.0.2)(vite@8.3.0)
       '@vitejs/devtools-rolldown': 0.7.3(cac@7.0.0)(crossws@0.4.12(srvx@1.0.4))(srvx@1.0.4)(vite@8.3.0)
@@ -5210,7 +5516,7 @@ snapshots:
   '@vitejs/plugin-react@6.1.1(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.145.0)(vite@8.3.0)':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
     optionalDependencies:
       babel-plugin-react-compiler: 1.0.0
       oxc-transform-react: 0.145.0
@@ -5226,7 +5532,7 @@ snapshots:
       srvx: 0.12.8
       strip-literal: 3.1.0
       turbo-stream: 3.2.1
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
       vitefu: 1.1.3(vite@8.3.0)
 
   accepts@2.0.0:
@@ -6376,10 +6682,10 @@ snapshots:
 
   mimic-function@5.0.1: {}
 
-  miniflare@5.20260911.0-alpha:
+  miniflare@5.20260911.0-alpha(@types/node@26.5.1):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
-      sharp: 0.35.4
+      sharp: 0.35.4(@types/node@26.5.1)
       undici: 7.29.0
       workerd: 1.20260911.1
       ws: 8.21.0
@@ -6415,6 +6721,8 @@ snapshots:
       content-type: 2.1.0
 
   node-releases@2.0.54: {}
+
+  node@runtime:26.8.2: {}
 
   nostics@1.2.0:
     optional: true
@@ -6843,7 +7151,7 @@ snapshots:
       - supports-color
       - typescript
 
-  sharp@0.35.4:
+  sharp@0.35.4(@types/node@26.5.1):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -6874,6 +7182,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.4
       '@img/sharp-win32-ia32': 0.35.4
       '@img/sharp-win32-x64': 0.35.4
+      '@types/node': 26.5.1
 
   shebang-command@2.0.0:
     dependencies:
@@ -7066,6 +7375,8 @@ snapshots:
   ufo@1.6.4:
     optional: true
 
+  undici-types@8.9.0: {}
+
   undici@7.29.0: {}
 
   unenv@2.0.0-rc.24:
@@ -7098,7 +7409,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0):
+  vite@8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -7106,6 +7417,7 @@ snapshots:
       rolldown: 1.2.7
       tinyglobby: 0.2.17
     optionalDependencies:
+      '@types/node': 26.5.1
       '@vitejs/devtools': 0.7.3(@devframes/json-render@0.9.18(@devframes/hub@0.9.18(crossws@0.4.12(srvx@1.0.4))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(devframe@0.9.18(cac@7.0.0)(srvx@1.0.4)))(@vitejs/devtools-oxc@0.7.3)(@vitejs/devtools-rolldown@0.7.3)(@vitejs/devtools-vite@0.7.3)(crossws@0.4.12(srvx@1.0.4))(srvx@1.0.4)(vite@8.3.0)
       esbuild: 0.28.1
       fsevents: 2.3.3
@@ -7115,7 +7427,7 @@ snapshots:
 
   vitefu@1.1.3(vite@8.3.0):
     optionalDependencies:
-      vite: 8.3.0(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
+      vite: 8.3.0(@types/node@26.5.1)(@vitejs/devtools@0.7.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
 
   which@2.0.2:
     dependencies:
@@ -7133,13 +7445,13 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20260911.1
       '@cloudflare/workerd-windows-64': 1.20260911.1
 
-  wrangler@4.131.1:
+  wrangler@4.131.1(@types/node@26.5.1):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
       '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260911.1)
       blake3-wasm: 2.1.5
       esbuild: 0.28.1
-      miniflare: 5.20260911.0-alpha
+      miniflare: 5.20260911.0-alpha(@types/node@26.5.1)
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20260911.1

@@ -1,9 +1,9 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "c0f07fe2-d40a-47c0-a885-9677cd44d39c",
+  "id": "69a6c68d-f226-4ca8-8776-bbff232169a1",
   "prevIds": [
-    "4fa9a24c-0f9f-4217-9177-a823cbe3fe59"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
@@ -85,10 +85,20 @@
       "table": "notification"
     },
     {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "endpoint",
+      "entityType": "columns",
+      "table": "notification"
+    },
+    {
       "type": "integer",
       "notNull": true,
       "autoincrement": false,
-      "default": null,
+      "default": "false",
       "generated": null,
       "name": "success",
       "entityType": "columns",

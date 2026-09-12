@@ -4,6 +4,16 @@
   "compatibility_date": "2025-08-03",
   "compatibility_flags": ["nodejs_als"],
   "main": "./src/index.tsx",
+  "ratelimits": [
+    {
+      "name": "RATE_LIMIT",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 60,
+        "period": 60,
+      },
+    },
+  ],
   "durable_objects": {
     "bindings": [
       {
