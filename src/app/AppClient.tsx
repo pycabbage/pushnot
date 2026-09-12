@@ -9,6 +9,7 @@ import { z } from "zod"
 
 import { DataTable } from "@/components/data-table"
 import type { DataTableFeatures } from "@/components/data-table"
+import { useTheme } from "@/components/theme-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
@@ -95,6 +96,7 @@ export default function AppClient({
   const [isSending, startSendTransition] = useTransition()
   const [isRegistered, setIsRegistered] = useState(initialRegistered)
   const notifications = useNotificationsStore((state) => state.notifications)
+  useTheme()
 
   async function handleToggleRegistration() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {

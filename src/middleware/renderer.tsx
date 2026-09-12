@@ -15,7 +15,7 @@ declare module "hono" {
 
 function Layout({ children }: { children: ReactNode }) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <head>
         {import.meta.env.DEV && <script type="module" src="/@vite/client" />}
         {import.meta.viteRsc.loadCss()}

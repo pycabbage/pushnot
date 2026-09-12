@@ -136,9 +136,12 @@ Cloudflare.Env }` と、同ファイル内で `Cloudflare.Env` を
       `browser(reason?: string | (() => unknown)): BrowserUsable` を
       エクスポートしていることを、インストール済み`react-dom@19.3.0`の
       実ソース(`node_modules/react-dom/cjs/react-dom.development.js`)
-      で確認した。`@types/react-dom`では`canary.d.ts`にのみ型定義があり、
-      `tsconfig.json`の`types`に`"react-dom/canary"`を追加して読み込んで
-      いる。
+      で確認した。型定義も`@types/react-dom/index.d.ts`に
+      `export function browser(reason?: string | (() => unknown)):BrowserUsable;`
+      として含まれており(JSDocに`@version 19.3.0`と
+      明記)、`@types/react-dom/canary.d.ts`は`export {}`のみの空ファイル
+      である。そのため`tsconfig.json`の`types`に`"react-dom/canary"`を
+      追加する必要はなく、追加していない。
     - `use(browser(reason))` を呼ぶと、`ssr` 環境(`react-dom/server.edge`)
       では `$$typeof: Symbol.for("react.recoverable")` を持つ
       リカバラブルなエラーを`use()`自身が投げる(react-dom-server.edge
@@ -258,7 +261,7 @@ text/x-component`で同じURLへ取りに行く」方式(項目11)へ戻せば
   ことを実機で確認した上で一時的に採用していた。React/React DOMを
   19.3へ更新した後、同じ目的のために設計された公式API
   (`react-dom`の`browser()` + `use()`)の存在をソースと型定義
-  (`@types/react-dom/canary.d.ts`)で確認できたため、こちらへ置き換えた。
+  (`@types/react-dom/index.d.ts`)で確認できたため、こちらへ置き換えた。
   DOM要素の存在を経由しない分、`browser()`の方が「このサブツリーは
   ブラウザでしか描画できない」という意図をより直接的に表現できる。
 - **`useSyncExternalStore` の `subscribe` 引数(ブラウザでのみ呼ばれ、
