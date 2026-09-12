@@ -1,10 +1,10 @@
-onlyBuiltDependencies:
-  - esbuild
-  - workerd
 allowBuilds:
   esbuild: true
+  msgpackr-extract: true
   workerd: true
 minimumReleaseAgeExclude:
   - react-dom@19.3.0
   - react@19.3.0
   - scheduler@0.28.0
+packages:
+  - "packages/*"

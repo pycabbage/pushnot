@@ -1,0 +1,34 @@
+{
+  "name": "opencode-pushnot",
+  "version": "0.0.0",
+  "description": "Opencode plugin for pushnot",
+  "license": "MIT",
+  "author": {
+    "name": "pycabbage",
+    "url": "https://github.com/pycabbage/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pycabbage/pushnot/",
+    "directory": "packages/opencode-pushnot"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.18.30",
+    "hono": "^4.13.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "pushnot": "workspace:^",
+    "typescript": "^7.0.2"
+  }
+}
