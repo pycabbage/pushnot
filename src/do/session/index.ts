@@ -5,13 +5,13 @@ import { migrate } from "drizzle-orm/durable-sqlite/migrator"
 import type { z } from "zod"
 
 import migrations from "../../../drizzle/session/migrations"
-import { pushSchema } from "../../api/push"
+import { defaultPushSchema } from "../../api/push"
 import { sendWebPush } from "../../lib/web-push"
 import { relations } from "./relations"
 import { notificationTable, subscriberTable } from "./schema"
 
 type RegisterInput = Pick<typeof subscriberTable.$inferInsert, "endpoint" | "p256dh" | "auth">
-type PushInput = z.infer<typeof pushSchema>
+type PushInput = z.infer<typeof defaultPushSchema>
 
 export class SessionDO extends DurableObject<CloudflareBindings> {
   db: DrizzleSqliteDODatabase<typeof relations>
