@@ -1,10 +1,20 @@
 import { env } from "cloudflare:workers"
 
 import { QR } from "@/components/qr"
+import { RepoLink } from "@/components/repo-link"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,7 +24,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { URLBox } from "@/components/url-box"
 
 import type { Env } from "../env"
-import AppClient from "./AppClient"
+import AppClient, { ThemeToggle } from "./AppClient"
 
 interface AppProps {
   vars: Env["Variables"]
@@ -29,20 +39,39 @@ export default async function App({ vars, url }: AppProps) {
   pushURL.pathname = `/api/push/${vars.sessionId}`
 
   return (
-    <>
-      <h1 className="">pushnot</h1>
-      <p className="">Notification delivery for agents.</p>
-      <p className="">Installation instructions:</p>
-      <Tabs defaultValue="claude_code">
-        <TabsList>
-          <TabsTrigger value="claude_code">Claude Code</TabsTrigger>
-          <TabsTrigger value="codex">Codex</TabsTrigger>
-          <TabsTrigger value="opencode">OpenCode</TabsTrigger>
-        </TabsList>
-        <TabsContent value="claude_code">
-          Add hooks to <code>~/.claude/settings.json</code> :
-          <Textarea readOnly className="resize-none">
-            {`
+    <div className="mx-auto flex min-h-svh w-full max-w-2xl flex-col gap-6 p-6">
+      <header className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="font-heading text-lg font-semibold">pushnot</h1>
+          <p className="text-xs text-muted-foreground">Notification delivery for agents.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <RepoLink />
+          <ThemeToggle />
+        </div>
+      </header>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Installation</CardTitle>
+          <CardDescription>
+            Add a hook to your coding agent to deliver notifications to this session.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="claude_code">
+            <TabsList>
+              <TabsTrigger value="claude_code">Claude Code</TabsTrigger>
+              <TabsTrigger value="codex">Codex</TabsTrigger>
+              <TabsTrigger value="opencode">OpenCode</TabsTrigger>
+            </TabsList>
+            <TabsContent value="claude_code" className="flex flex-col gap-2 pt-3">
+              <p>
+                Add hooks to{" "}
+                <code className="rounded-none bg-muted px-1 py-0.5">~/.claude/settings.json</code>:
+              </p>
+              <Textarea readOnly className="resize-none font-mono">
+                {`
 {
   "hooks": {
     "Stop": [
@@ -58,12 +87,15 @@ export default async function App({ vars, url }: AppProps) {
   }
 }
 `.trim()}
-          </Textarea>
-        </TabsContent>
-        <TabsContent value="codex">
-          Add hooks to <code>~/.codex/hooks.json</code> :
-          <Textarea readOnly className="resize-none">
-            {`
+              </Textarea>
+            </TabsContent>
+            <TabsContent value="codex" className="flex flex-col gap-2 pt-3">
+              <p>
+                Add hooks to{" "}
+                <code className="rounded-none bg-muted px-1 py-0.5">~/.codex/hooks.json</code>:
+              </p>
+              <Textarea readOnly className="resize-none font-mono">
+                {`
 {
   "hooks": {
     "PermissionRequest": [
@@ -89,27 +121,52 @@ export default async function App({ vars, url }: AppProps) {
   }
 }
 `.trim()}
-          </Textarea>
-          If <code>approvals_reviewer = "auto_review"</code> is set, PermissionRequest can be
-          omitted.
-        </TabsContent>
-        <TabsContent value="opencode">Under construction.</TabsContent>
-      </Tabs>
+              </Textarea>
+              <p className="text-muted-foreground">
+                If{" "}
+                <code className="rounded-none bg-muted px-1 py-0.5">
+                  approvals_reviewer = "auto_review"
+                </code>{" "}
+                is set, PermissionRequest can be omitted.
+              </p>
+            </TabsContent>
+            <TabsContent value="opencode" className="pt-3 text-muted-foreground">
+              Under construction.
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+        <CardFooter>
+          <Dialog>
+            <DialogTrigger
+              render={
+                <Button variant="outline" size="sm">
+                  Add other device
+                </Button>
+              }
+            />
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add other device</DialogTitle>
+                <DialogDescription>
+                  Scan the QR code or copy the link on another device to join this session.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col items-center gap-4">
+                <div className="border bg-background p-3">
+                  <QR className="aspect-square size-40" url={joinURL.toString()} />
+                </div>
+                <URLBox url={joinURL.toString()} />
+              </div>
+            </DialogContent>
+          </Dialog>
+        </CardFooter>
+      </Card>
+
       <AppClient
         sessionId={vars.sessionId}
         vapidPublicKey={env.VAPID_PUBLIC_KEY}
         initialRegistered={isRegistered}
       />
-      <Dialog>
-        <DialogTrigger render={<Button>Add other device</Button>} />
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add other device</DialogTitle>
-          </DialogHeader>
-          <URLBox url={joinURL.toString()} />
-          <QR className="aspect-square size-48" url={joinURL.toString()} />
-        </DialogContent>
-      </Dialog>
-    </>
+    </div>
   )
 }

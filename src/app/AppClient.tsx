@@ -1,6 +1,13 @@
 "use client"
 
-import { ArrowsDownUpIcon, BellSlashIcon } from "@phosphor-icons/react"
+import {
+  ArrowsDownUpIcon,
+  BellSlashIcon,
+  CheckIcon,
+  DesktopIcon,
+  MoonIcon,
+  SunIcon,
+} from "@phosphor-icons/react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { hc } from "hono/client"
 import { Suspense, use, useState, useTransition } from "react"
@@ -12,7 +19,23 @@ import type { DataTableFeatures } from "@/components/data-table"
 import { useTheme } from "@/components/theme-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { Spinner } from "@/components/ui/spinner"
 import { notificationSchema } from "@/do/session/schema/notification"
 import type { NotificationRow } from "@/do/session/schema/notification"
 
@@ -71,6 +94,40 @@ const notificationColumns: ColumnDef<DataTableFeatures, NotificationRow, unknown
       ),
   },
 ]
+
+export function ThemeToggle() {
+  const theme = useTheme((state) => state.theme)
+  const setTheme = useTheme((state) => state.setTheme)
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={<Button variant="outline" size="icon" aria-label="Toggle theme" />}
+      >
+        {theme === "dark" ? <MoonIcon /> : theme === "light" ? <SunIcon /> : <DesktopIcon />}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => setTheme("light")}>
+            <SunIcon data-icon="inline-start" />
+            Light
+            {theme === "light" && <CheckIcon data-icon="inline-end" />}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("dark")}>
+            <MoonIcon data-icon="inline-start" />
+            Dark
+            {theme === "dark" && <CheckIcon data-icon="inline-end" />}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("system")}>
+            <DesktopIcon data-icon="inline-start" />
+            System
+            {theme === "system" && <CheckIcon data-icon="inline-end" />}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
 
 interface AppClientProps {
   sessionId: string
@@ -170,31 +227,62 @@ export default function AppClient({
       : "Register client"
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <Suspense fallback={null}>
         <NotificationsSocket />
       </Suspense>
-      <Button onClick={handleToggleRegistration} disabled={isRegistering}>
-        {registerLabel}
-      </Button>
-      <Button onClick={handleSendTestNotification} disabled={!isRegistered || isSending}>
-        {isSending ? "Sending..." : "Send test notification"}
-      </Button>
-      {notifications.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <BellSlashIcon />
-            </EmptyMedia>
-            <EmptyTitle>No notifications yet</EmptyTitle>
-            <EmptyDescription>
-              Send a test notification to see delivery history here.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <DataTable columns={notificationColumns} data={notifications} />
-      )}
+      <Card>
+        <CardHeader>
+          <CardTitle>Device</CardTitle>
+          <CardDescription>Register this browser to receive push notifications.</CardDescription>
+          <CardAction>
+            <Badge variant={isRegistered ? "secondary" : "outline"}>
+              {isRegistered ? "Registered" : "Not registered"}
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-2">
+          <Button
+            onClick={handleToggleRegistration}
+            disabled={isRegistering}
+            variant={isRegistered ? "outline" : "default"}
+          >
+            {isRegistering && <Spinner data-icon="inline-start" />}
+            {registerLabel}
+          </Button>
+          <Button
+            onClick={handleSendTestNotification}
+            disabled={!isRegistered || isSending}
+            variant="outline"
+          >
+            {isSending && <Spinner data-icon="inline-start" />}
+            {isSending ? "Sending..." : "Send test notification"}
+          </Button>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Notification history</CardTitle>
+          <CardDescription>Recent push notifications sent to this session.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {notifications.length === 0 ? (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <BellSlashIcon />
+                </EmptyMedia>
+                <EmptyTitle>No notifications yet</EmptyTitle>
+                <EmptyDescription>
+                  Send a test notification to see delivery history here.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          ) : (
+            <DataTable columns={notificationColumns} data={notifications} />
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
