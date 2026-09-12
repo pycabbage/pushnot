@@ -15,8 +15,15 @@ declare module "hono" {
 
 function Layout({ children }: { children: ReactNode }) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>pushnot</title>
+        <meta
+          name="description"
+          content="Deliver coding agent (Claude Code, Codex, and more) completion events to your browser as Web Push notifications."
+        />
         {import.meta.env.DEV && <script type="module" src="/@vite/client" />}
         {import.meta.viteRsc.loadCss()}
       </head>

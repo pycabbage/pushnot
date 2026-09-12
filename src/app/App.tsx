@@ -39,7 +39,7 @@ export default async function App({ vars, url }: AppProps) {
   pushURL.pathname = `/api/push/${vars.sessionId}`
 
   return (
-    <div className="mx-auto flex min-h-svh w-full max-w-2xl flex-col gap-6 p-6">
+    <main className="mx-auto flex min-h-svh w-full max-w-2xl flex-col gap-6 p-6">
       <header className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-lg font-semibold">pushnot</h1>
@@ -70,7 +70,11 @@ export default async function App({ vars, url }: AppProps) {
                 Add hooks to{" "}
                 <code className="rounded-none bg-muted px-1 py-0.5">~/.claude/settings.json</code>:
               </p>
-              <Textarea readOnly className="resize-none font-mono">
+              <Textarea
+                readOnly
+                aria-label="Claude Code hook configuration"
+                className="resize-none font-mono"
+              >
                 {`
 {
   "hooks": {
@@ -94,7 +98,11 @@ export default async function App({ vars, url }: AppProps) {
                 Add hooks to{" "}
                 <code className="rounded-none bg-muted px-1 py-0.5">~/.codex/hooks.json</code>:
               </p>
-              <Textarea readOnly className="resize-none font-mono">
+              <Textarea
+                readOnly
+                aria-label="Codex hook configuration"
+                className="resize-none font-mono"
+              >
                 {`
 {
   "hooks": {
@@ -167,6 +175,6 @@ export default async function App({ vars, url }: AppProps) {
         vapidPublicKey={env.VAPID_PUBLIC_KEY}
         initialRegistered={isRegistered}
       />
-    </div>
+    </main>
   )
 }
