@@ -23,12 +23,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "^1.18.30",
-    "hono": "^4.13.7"
+    "@opencode-ai/plugin": "^1.18.30"
   },
   "devDependencies": {
-    "@types/node": "^22.20.2",
-    "pushnot": "workspace:^",
-    "typescript": "^7.0.2"
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
   }
 }

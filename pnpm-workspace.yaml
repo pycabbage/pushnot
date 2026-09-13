@@ -8,3 +8,6 @@ minimumReleaseAgeExclude:
   - scheduler@0.28.0
 packages:
   - "packages/*"
+catalog:
+  "@types/node": ^26.5.1
+  typescript: ^7.0.2

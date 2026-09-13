@@ -1,7 +1,22 @@
 import type { Plugin } from "@opencode-ai/plugin"
 import { tool } from "@opencode-ai/plugin"
-import { hc } from "hono/client"
-import type { AppType } from "pushnot"
+
+interface SendNotificationOptions {
+  baseURL: string
+  sessionId: string
+  title: string
+  body: string
+}
+async function sendNotification({ baseURL, sessionId, ...payload }: SendNotificationOptions) {
+  const url = new URL(`/api/push/${sessionId}`, baseURL)
+  return await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  })
+}
 
 export const PushnotPlugin: Plugin = async (_, options) => {
   const { session, baseURL = "https://pushnot.cabbagelettuce.com/" } = options ?? {}
@@ -9,46 +24,36 @@ export const PushnotPlugin: Plugin = async (_, options) => {
     console.error("Invalid option provided.")
     return {}
   }
-  const client = hc<AppType>(baseURL)
 
   return {
     async event({ event }) {
       switch (event.type) {
         case "session.idle":
-          await client.api.push[":sessionId"].$post({
-            param: {
-              sessionId: session,
-            },
-            json: {
-              title: `OpenCode: Session Idle`,
-              body: `Session ${event.properties.sessionID} is now idle.`,
-            },
+          await sendNotification({
+            baseURL,
+            sessionId: session,
+            title: `OpenCode: Session Idle`,
+            body: `Session ${event.properties.sessionID} is now idle.`,
           })
           break
       }
     },
     async "permission.ask"({ title }) {
       // Send notification
-      await client.api.push[":sessionId"].$post({
-        param: {
-          sessionId: session,
-        },
-        json: {
-          title: `OpenCode: Ask permissions`,
-          body: `${title}`,
-        },
+      await sendNotification({
+        baseURL,
+        sessionId: session,
+        title: `OpenCode: Ask permissions`,
+        body: `${title}`,
       })
     },
     async "tool.execute.after"({ tool, args }) {
       if (tool === "question") {
-        await client.api.push[":sessionId"].$post({
-          param: {
-            sessionId: session,
-          },
-          json: {
-            title: `OpenCode: Ask question`,
-            body: `${JSON.stringify(args)}`,
-          },
+        await sendNotification({
+          baseURL,
+          sessionId: session,
+          title: `OpenCode: Ask question`,
+          body: `${JSON.stringify(args)}`,
         })
       }
     },
@@ -62,19 +67,17 @@ This can be used for purposes such as reporting work progress.
           payload: tool.schema.string(),
         },
         async execute({ payload }) {
-          const result = await client.api.push[":sessionId"].$post({
-            param: {
+          try {
+            await sendNotification({
+              baseURL,
               sessionId: session,
-            },
-            json: {
               title: `OpenCode: Agent sent notification`,
               body: payload,
-            },
-          })
-          if (!result.ok) {
+            })
+            return "Notification sent successfully."
+          } catch {
             return `Failed to send notification`
           }
-          return "Notification sent successfully."
         },
       }),
     },

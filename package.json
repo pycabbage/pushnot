@@ -35,7 +35,7 @@
     "@cloudflare/vite-plugin": "^1.54.8",
     "@hono/zod-validator": "^0.9.1",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.5.1",
+    "@types/node": "catalog:",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
