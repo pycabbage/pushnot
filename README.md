@@ -16,6 +16,8 @@ A notification service that delivers coding agent (Claude Code, Codex, and more)
 3. Pick the tab for the agent you use (Claude Code or Codex) and add the shown hook configuration to the matching config file.
    - Claude Code: `~/.claude/settings.json`
    - Codex: `~/.codex/hooks.json`
+   - OpenCode: `~/.config/opencode/opencode.jsonc`
+   - Copilot CLI: `~/.copilot/hooks/pushnot.json`
 4. Notifications arrive on the registered browser whenever the agent finishes its work.
 5. Use "Add other device" to scan the QR code or copy the link, and open the same session on another device.
 6. Delivered notifications are listed at the bottom of the page at any time.

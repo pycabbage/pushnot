@@ -64,6 +64,7 @@ export default async function App({ vars, url }: AppProps) {
               <TabsTrigger value="claude_code">Claude Code</TabsTrigger>
               <TabsTrigger value="codex">Codex</TabsTrigger>
               <TabsTrigger value="opencode">OpenCode</TabsTrigger>
+              <TabsTrigger value="copilot_cli">Copilot CLI</TabsTrigger>
             </TabsList>
             <TabsContent value="claude_code" className="flex flex-col gap-2 pt-3">
               <p>
@@ -161,6 +162,34 @@ export default async function App({ vars, url }: AppProps) {
       },
     ],
   ],
+}
+`.trim()}
+              </Textarea>
+            </TabsContent>
+            <TabsContent value="copilot_cli" className="flex flex-col gap-2 pt-3">
+              <p>
+                Create{" "}
+                <code className="rounded-none bg-muted px-1 py-0.5">
+                  ~/.copilot/hooks/pushnot.json
+                </code>
+                :
+              </p>
+              <Textarea
+                readOnly
+                aria-label="Codex hook configuration"
+                className="resize-none font-mono"
+              >
+                {`
+{
+  "version": 1,
+  "hooks": {
+    "agentStop": [
+      {
+        "type": "http",
+        "url": "${pushURL}"
+      }
+    ]
+  }
 }
 `.trim()}
               </Textarea>
