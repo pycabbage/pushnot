@@ -138,8 +138,32 @@ export default async function App({ vars, url }: AppProps) {
                 is set, PermissionRequest can be omitted.
               </p>
             </TabsContent>
-            <TabsContent value="opencode" className="pt-3 text-muted-foreground">
-              Under construction.
+            <TabsContent value="opencode" className="flex flex-col gap-2 pt-3">
+              <p>
+                Add plugin configuration to{" "}
+                <code className="rounded-none bg-muted px-1 py-0.5">
+                  ~/.config/opencode/opencode.jsonc
+                </code>
+                :
+              </p>
+              <Textarea
+                readOnly
+                aria-label="OpenCode hook configuration"
+                className="resize-none font-mono"
+              >
+                {`
+{
+  "plugin": [
+    [
+      "opencode-pushnot@latest",
+      {
+        "session": "${vars.sessionId}",
+      },
+    ],
+  ],
+}
+`.trim()}
+              </Textarea>
             </TabsContent>
           </Tabs>
         </CardContent>
