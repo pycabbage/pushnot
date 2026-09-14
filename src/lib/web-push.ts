@@ -17,7 +17,7 @@ const vapidPrivateKeySchema = z.object({
   d: z.string(),
 })
 
-export type PushSubscriptionInput = {
+export interface PushSubscriptionInput {
   endpoint: string
   p256dh: string
   auth: string
@@ -28,7 +28,7 @@ export type SendWebPushResult =
   | { status: "gone" }
   | { status: "error"; httpStatus: number }
 
-export type WebPushEnv = {
+export interface WebPushEnv {
   VAPID_PRIVATE_KEY_JWK: string
   VAPID_PUBLIC_KEY: string
 }

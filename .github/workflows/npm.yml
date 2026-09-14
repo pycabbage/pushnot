@@ -1,0 +1,19 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - run: pnpm install
+      - run: pnpm build
+        working-directory: packages/opencode-pushnot
+      - run: pnpm stage publish
+        working-directory: packages/opencode-pushnot

@@ -1,7 +1,7 @@
 import { createFactory } from "hono/factory"
 import type { JwtVariables } from "hono/jwt"
 
-export type Env = {
+export interface Env {
   Bindings: CloudflareBindings
   Variables: JwtVariables & {
     sessionId: string

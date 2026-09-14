@@ -1,4 +1,4 @@
-import type { Plugin } from "@opencode-ai/plugin"
+import type { Plugin, PluginInput } from "@opencode-ai/plugin"
 import { tool } from "@opencode-ai/plugin"
 
 interface SendNotificationOptions {
@@ -18,7 +18,27 @@ async function sendNotification({ baseURL, sessionId, ...payload }: SendNotifica
   })
 }
 
-export const PushnotPlugin: Plugin = async (_, options) => {
+interface GetLastMessageOptions {
+  client: PluginInput["client"]
+  sessionID: string
+}
+async function getLastMessage({ client, sessionID }: GetLastMessageOptions): Promise<string> {
+  const { data: messages } = await client.session.messages({
+    path: {
+      id: sessionID,
+    },
+  })
+  const lastAssistantMessage = messages?.findLast((message) => message.info.role === "assistant")
+  if (!lastAssistantMessage) {
+    return ""
+  }
+  return lastAssistantMessage.parts
+    .filter((part) => part.type === "text")
+    .map((part) => part.text)
+    .join("\n")
+}
+
+export const PushnotPlugin: Plugin = async ({ client }, options) => {
   const { session, baseURL = "https://pushnot.cabbagelettuce.com/" } = options ?? {}
   if (typeof session !== "string" || typeof baseURL !== "string") {
     console.error("Invalid option provided.")
@@ -26,33 +46,51 @@ export const PushnotPlugin: Plugin = async (_, options) => {
   }
 
   return {
+    async config() {},
     async event({ event }) {
       switch (event.type) {
         case "session.idle":
+          const { data: sessionData } = await client.session.get({
+            path: {
+              id: event.properties.sessionID,
+            },
+          })
+          if (!sessionData) return
+          if (sessionData.parentID) {
+            return
+          }
           await sendNotification({
             baseURL,
             sessionId: session,
-            title: `OpenCode: Session Idle`,
-            body: `Session ${event.properties.sessionID} is now idle.`,
+            title: `OpenCode: Session ${sessionData.title ?? event.properties.sessionID} Idle`,
+            body: await getLastMessage({ client, sessionID: event.properties.sessionID }),
+          })
+          break
+        case "tui.toast.show":
+          await sendNotification({
+            baseURL,
+            sessionId: session,
+            title: `OpenCode: [${event.properties.variant}] ${event.properties.title ?? "Notification"} `,
+            body: `${event.properties.message}`,
           })
           break
       }
     },
-    async "permission.ask"({ title }) {
+    async "permission.ask"({ title, sessionID }) {
       // Send notification
       await sendNotification({
         baseURL,
         sessionId: session,
-        title: `OpenCode: Ask permissions`,
+        title: `OpenCode: Ask permissions (${sessionID})`,
         body: `${title}`,
       })
     },
-    async "tool.execute.after"({ tool, args }) {
+    async "tool.execute.after"({ tool, args, sessionID }) {
       if (tool === "question") {
         await sendNotification({
           baseURL,
           sessionId: session,
-          title: `OpenCode: Ask question`,
+          title: `OpenCode: Ask question (${sessionID})`,
           body: `${JSON.stringify(args)}`,
         })
       }
@@ -64,15 +102,16 @@ Sends notifications to users.
 This can be used for purposes such as reporting work progress.
 `.trim(),
         args: {
-          payload: tool.schema.string(),
+          title: tool.schema.string().describe("Title of the notification"),
+          body: tool.schema.string().describe("Body content of the notification"),
         },
-        async execute({ payload }) {
+        async execute({ title, body }, { sessionID }) {
           try {
             await sendNotification({
               baseURL,
               sessionId: session,
-              title: `OpenCode: Agent sent notification`,
-              body: payload,
+              title: `OpenCode: ${title} (${sessionID})`,
+              body,
             })
             return "Notification sent successfully."
           } catch {
