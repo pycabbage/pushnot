@@ -23,7 +23,7 @@
     "@tanstack/react-table": "^9.2.4",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.2.6",
-    "drizzle-orm": "^1.0.0-rc.4",
+    "drizzle-orm": "^1.0.0-rc.5-5935859",
     "hono": "^4.13.7",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
