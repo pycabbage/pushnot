@@ -42,7 +42,7 @@
     "@vitejs/plugin-rsc": "^0.5.34",
     "babel-plugin-react-compiler": "^1.0.0",
     "concurrently": "^10.0.5",
-    "drizzle-kit": "^1.0.0-rc.4",
+    "drizzle-kit": "^1.0.0-rc.5-5935859",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
     "markdownlint-cli2": "^0.23.2",
